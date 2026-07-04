@@ -12,14 +12,14 @@ import net.minecraft.world.gen.feature.WorldGenMinable;
 
 /**
  * WorldGenerator for mineable blocks.
- * 
+ *
  * @author rubensworks
  *
  */
 public class WorldGenMinableExtended extends WorldGenMinable implements IRetroGen {
 
     protected int blocksPerVein;
-    protected int veinsPerChunk;
+    protected float veinsPerChunk;
     protected int startY;
     protected int endY;
     protected Block block;
@@ -28,16 +28,16 @@ public class WorldGenMinableExtended extends WorldGenMinable implements IRetroGe
 
     /**
      * Make a new instance.
-     * 
+     *
      * @param block         Block to spawn.
      * @param meta          meta to spawn.
      * @param blocksPerVein Blocks per vein.
-     * @param veinsPerChunk Veins per chunk.
+     * @param veinsPerChunk Veins per chunk (Accepts float for rare spawns, e.g., 0.1f).
      * @param startY        Start coordinate for Y
      * @param endY          End coordinate for Y.
      * @param replaceTarget The replace target blockState. Stone for overworld, netherrack for nether.
      */
-    public WorldGenMinableExtended(Block block, int meta, int blocksPerVein, int veinsPerChunk, int startY, int endY,
+    public WorldGenMinableExtended(Block block, int meta, int blocksPerVein, float veinsPerChunk, int startY, int endY,
         Block replaceTarget) {
         super(block, meta, blocksPerVein, replaceTarget);
         this.block = block;
@@ -50,15 +50,31 @@ public class WorldGenMinableExtended extends WorldGenMinable implements IRetroGe
     }
 
     /**
-     * Generate the ores in a loop for the veins per chunk/
-     * 
+     * Helper method to determine how many veins to generate in a single chunk
+     * based on the float value.
+     */
+    protected int getVeinCountToGenerate(Random rand) {
+        int count = (int) this.veinsPerChunk;
+        float remainder = this.veinsPerChunk - count;
+
+        if (remainder > 0.0F && rand.nextFloat() < remainder) {
+            count++;
+        }
+        return count;
+    }
+
+    /**
+     * Generate the ores in a loop for the veins per chunk
+     *
      * @param world  The world.
      * @param rand   Random object.
      * @param chunkX X chunk coordinate.
      * @param chunkZ Z chunk coordinate.
      */
     public void loopGenerate(World world, Random rand, int chunkX, int chunkZ) {
-        for (int k = 0; k < veinsPerChunk; k++) {
+        int actualVeins = getVeinCountToGenerate(rand);
+
+        for (int k = 0; k < actualVeins; k++) {
             int firstBlockXCoord = chunkX + rand.nextInt(16);
             int firstBlockYCoord = startY + rand.nextInt(endY - startY);
             int firstBlockZCoord = chunkZ + rand.nextInt(16);
@@ -74,7 +90,7 @@ public class WorldGenMinableExtended extends WorldGenMinable implements IRetroGe
     /**
      * Generate for only one chunk (this will NOT cross chunk boundaries!)
      * Based on the generate method for World instead of Chunk.
-     * 
+     *
      * @param chunk The chunk to generate in.
      * @param rand  Random.
      * @param x     Chunk X.
@@ -155,7 +171,9 @@ public class WorldGenMinableExtended extends WorldGenMinable implements IRetroGe
 
     @Override
     public void retroGenerateChunk(NBTTagCompound tag, Chunk chunk, Random rand) {
-        for (int k = 0; k < veinsPerChunk; k++) {
+        int actualVeins = getVeinCountToGenerate(rand);
+
+        for (int k = 0; k < actualVeins; k++) {
             int x = rand.nextInt(16);
             int y = startY + rand.nextInt(endY - startY);
             int z = rand.nextInt(16);

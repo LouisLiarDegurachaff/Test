@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.config.backport.WorldGenConfig;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.world.gen.SimpleMinableWorldGenerator;
 import ruiseki.omoshiroikamo.core.world.gen.WorldGenMinableExtended;
@@ -68,13 +69,42 @@ public class ModFluidGases {
         List<WorldGenMinableExtended> generators = new ArrayList<>();
 
         if (BLOCKS.containsKey(EnumFluidMaterial.HELIUM)) {
-            generators.add(new WorldGenGasPocket(BLOCKS.get(EnumFluidMaterial.HELIUM), 20, 1, 10, 60));
+            WorldGenConfig.GasPocketGenSettings cfg = WorldGenConfig.helium;
+            if (cfg.enable) {
+                generators.add(
+                    new WorldGenGasPocket(
+                        BLOCKS.get(EnumFluidMaterial.HELIUM),
+                        cfg.pocketSize,
+                        cfg.pocketsPerChunk,
+                        cfg.minHeight,
+                        cfg.maxHeight));
+            }
         }
+
         if (BLOCKS.containsKey(EnumFluidMaterial.CHLORINE)) {
-            generators.add(new WorldGenGasPocket(BLOCKS.get(EnumFluidMaterial.CHLORINE), 15, 1, 5, 30));
+            WorldGenConfig.GasPocketGenSettings cfg = WorldGenConfig.chlorine;
+            if (cfg.enable) {
+                generators.add(
+                    new WorldGenGasPocket(
+                        BLOCKS.get(EnumFluidMaterial.CHLORINE),
+                        cfg.pocketSize,
+                        cfg.pocketsPerChunk,
+                        cfg.minHeight,
+                        cfg.maxHeight));
+            }
         }
+
         if (BLOCKS.containsKey(EnumFluidMaterial.FLUORINE)) {
-            generators.add(new WorldGenGasPocket(BLOCKS.get(EnumFluidMaterial.FLUORINE), 10, 1, 5, 20));
+            WorldGenConfig.GasPocketGenSettings cfg = WorldGenConfig.fluorine;
+            if (cfg.enable) {
+                generators.add(
+                    new WorldGenGasPocket(
+                        BLOCKS.get(EnumFluidMaterial.FLUORINE),
+                        cfg.pocketSize,
+                        cfg.pocketsPerChunk,
+                        cfg.minHeight,
+                        cfg.maxHeight));
+            }
         }
 
         if (!generators.isEmpty()) {
