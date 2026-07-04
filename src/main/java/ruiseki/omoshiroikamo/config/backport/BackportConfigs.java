@@ -42,6 +42,7 @@ public class BackportConfigs {
         ConfigurationManager.registerConfig(CowConfig.class);
         ConfigurationManager.registerConfig(IDsConfig.class);
         ConfigurationManager.registerConfig(DMLConfig.class);
-        MachineryConfig.registerConfig();
+        ConfigurationManager.registerConfig(MachineryConfig.class);
+        ConfigurationManager.registerConfig(WorldGenConfig.class);
     }
 }

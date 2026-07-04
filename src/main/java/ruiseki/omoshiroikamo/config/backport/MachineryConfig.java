@@ -2,14 +2,7 @@ package ruiseki.omoshiroikamo.config.backport;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
-import com.gtnewhorizon.gtnhlib.config.ConfigException;
-import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 import ruiseki.omoshiroikamo.Reference;
-import ruiseki.omoshiroikamo.config.backport.machinery.MachineryWorldGenConfig;
-import ruiseki.omoshiroikamo.config.backport.multiblock.MultiblockWorldGenConfig;
-import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig;
-import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
-import ruiseki.omoshiroikamo.config.backport.multiblock.SolarArrayConfig;
 
 @Config.Comment("Modular Machinery settings")
 @Config.LangKey(Reference.CONFIG + "modularConfig")
@@ -19,11 +12,6 @@ import ruiseki.omoshiroikamo.config.backport.multiblock.SolarArrayConfig;
     configSubDirectory = Reference.MOD_ID + "/modular",
     filename = "modular")
 public class MachineryConfig {
-
-    public static void registerConfig() throws ConfigException {
-        ConfigurationManager.registerConfig(MachineryConfig.class);
-        ConfigurationManager.registerConfig(MachineryWorldGenConfig.class);
-    }
 
     @Config.Comment("Default tint color for machine blocks (hex color code)")
     @Config.DefaultString("#FFFFFF")

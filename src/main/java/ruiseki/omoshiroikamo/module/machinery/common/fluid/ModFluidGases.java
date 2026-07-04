@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.config.backport.machinery.MachineryWorldGenConfig;
+import ruiseki.omoshiroikamo.config.backport.WorldGenConfig;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.world.gen.SimpleMinableWorldGenerator;
 import ruiseki.omoshiroikamo.core.world.gen.WorldGenMinableExtended;
@@ -69,7 +69,7 @@ public class ModFluidGases {
         List<WorldGenMinableExtended> generators = new ArrayList<>();
 
         if (BLOCKS.containsKey(EnumFluidMaterial.HELIUM)) {
-            MachineryWorldGenConfig.GasPocketGenSettings cfg = MachineryWorldGenConfig.helium;
+            WorldGenConfig.GasPocketGenSettings cfg = WorldGenConfig.helium;
             if (cfg.enable) {
                 generators.add(
                     new WorldGenGasPocket(
@@ -82,7 +82,7 @@ public class ModFluidGases {
         }
 
         if (BLOCKS.containsKey(EnumFluidMaterial.CHLORINE)) {
-            MachineryWorldGenConfig.GasPocketGenSettings cfg = MachineryWorldGenConfig.chlorine;
+            WorldGenConfig.GasPocketGenSettings cfg = WorldGenConfig.chlorine;
             if (cfg.enable) {
                 generators.add(
                     new WorldGenGasPocket(
@@ -95,7 +95,7 @@ public class ModFluidGases {
         }
 
         if (BLOCKS.containsKey(EnumFluidMaterial.FLUORINE)) {
-            MachineryWorldGenConfig.GasPocketGenSettings cfg = MachineryWorldGenConfig.fluorine;
+            WorldGenConfig.GasPocketGenSettings cfg = WorldGenConfig.fluorine;
             if (cfg.enable) {
                 generators.add(
                     new WorldGenGasPocket(
