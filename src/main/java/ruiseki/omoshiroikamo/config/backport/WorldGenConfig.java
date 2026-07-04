@@ -62,15 +62,15 @@ public class WorldGenConfig {
 
     @Config.Comment("Helium gas pocket generation settings")
     @Config.LangKey(Reference.CONFIG + "heliumGasGen")
-    public static final GasPocketGenSettings helium = new GasPocketGenSettings(true, 20, 1, 10, 60);
+    public static final GasPocketGenSettings helium = new GasPocketGenSettings(true, 20, 0.1f, 10, 60);
 
     @Config.Comment("Chlorine gas pocket generation settings")
     @Config.LangKey(Reference.CONFIG + "chlorineGasGen")
-    public static final GasPocketGenSettings chlorine = new GasPocketGenSettings(true, 15, 1, 5, 30);
+    public static final GasPocketGenSettings chlorine = new GasPocketGenSettings(true, 15, 0.1f, 5, 30);
 
     @Config.Comment("Fluorine gas pocket generation settings")
     @Config.LangKey(Reference.CONFIG + "fluorineGasGen")
-    public static final GasPocketGenSettings fluorine = new GasPocketGenSettings(true, 10, 1, 5, 20);
+    public static final GasPocketGenSettings fluorine = new GasPocketGenSettings(true, 10, 0.1f, 5, 20);
 
     public static class GasPocketGenSettings {
 
@@ -84,9 +84,9 @@ public class WorldGenConfig {
         public int pocketSize;
 
         @Config.Comment("Number of pockets per chunk")
-        @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0)
-        public int pocketsPerChunk;
+        @Config.DefaultFloat(0.1f)
+        @Config.RangeFloat(min = 0)
+        public float pocketsPerChunk;
 
         @Config.Comment("Minimum generation height")
         @Config.DefaultInt(5)
@@ -99,10 +99,11 @@ public class WorldGenConfig {
         public int maxHeight;
 
         public GasPocketGenSettings() {
-            this(true, 15, 1, 5, 40);
+            this(true, 15, 0.1f, 5, 40);
         }
 
-        public GasPocketGenSettings(boolean enable, int pocketSize, int pocketsPerChunk, int minHeight, int maxHeight) {
+        public GasPocketGenSettings(boolean enable, int pocketSize, float pocketsPerChunk, int minHeight,
+            int maxHeight) {
             this.enable = enable;
             this.pocketSize = pocketSize;
             this.pocketsPerChunk = pocketsPerChunk;
