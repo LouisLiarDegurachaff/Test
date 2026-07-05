@@ -8,7 +8,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.core.network.ExtendedBuffer;
 import ruiseki.omoshiroikamo.core.network.PacketCodec;
-import ruiseki.omoshiroikamo.integration.nei.NEIConfig;
+import ruiseki.omoshiroikamo.integration.nei.NEIReloadHandlers;
 
 /**
  * Packet to trigger NEI recipe reload on the client side.
@@ -31,7 +31,7 @@ public class PacketReloadNEI extends PacketCodec {
     @Override
     @SideOnly(Side.CLIENT)
     public void actionClient(World world, EntityPlayer player) {
-        NEIConfig.reloadModularMachineryRecipes();
+        NEIReloadHandlers.runAll();
     }
 
     @Override

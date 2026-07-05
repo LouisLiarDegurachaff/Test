@@ -57,7 +57,6 @@ import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 import ruiseki.omoshiroikamo.module.ids.IDsModule;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsBlocks;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
-import ruiseki.omoshiroikamo.module.machinery.MachineryModule;
 import ruiseki.omoshiroikamo.module.multiblock.MultiBlockModule;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockItems;
@@ -97,7 +96,6 @@ public class OmoshiroiKamo extends ModBase {
         registerModule(new CowsModule());
         registerModule(new DMLModule());
         registerModule(new IDsModule());
-        registerModule(new MachineryModule());
         registerModule(new MultiBlockModule());
     }
 
@@ -141,11 +139,7 @@ public class OmoshiroiKamo extends ModBase {
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
         StructureCompat.postInit();
-        MachineryModule.postInitStructures();
         if (MinecraftHelpers.isClientSide()) {
-            if (LibMods.NotEnoughItems.isLoaded()) {
-                NEIConfig.registerStructurePreviews();
-            }
             TextureLoader
                 .loadFromConfig(Reference.MOD_ID, Reference.MOD_NAME + " Runtime Textures", OmoshiroiKamo.class);
             UpdateChecker.checkUpdates();

@@ -35,10 +35,6 @@ public class BackportConfigs {
     @Config.RequiresMcRestart
     public static boolean enableDML;
 
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean enableMachinery;
-
     public static void registerConfig() throws ConfigException {
         ConfigurationManager.registerConfig(BackportConfigs.class);
         MultiBlockConfigs.registerConfig();
@@ -48,6 +44,5 @@ public class BackportConfigs {
         ConfigurationManager.registerConfig(StorageConfig.class);
         ConfigurationManager.registerConfig(IDsConfig.class);
         ConfigurationManager.registerConfig(DMLConfig.class);
-        ConfigurationManager.registerConfig(MachineryConfig.class);
     }
 }

@@ -57,7 +57,7 @@ public interface IStructureEntry extends IStructureSerializable {
 
     /**
      * Returns whether this structure entry requires dynamic evaluation.
-     * If true, {@link ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent}
+     * If true, the machinery process agent (OK Modular)
      * will re-evaluate performance multipliers every tick.
      *
      * @return true if dynamic evaluation is needed

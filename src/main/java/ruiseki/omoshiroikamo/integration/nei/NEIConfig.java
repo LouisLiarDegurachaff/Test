@@ -1,13 +1,6 @@
 package ruiseki.omoshiroikamo.integration.nei;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -15,18 +8,11 @@ import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 import codechicken.nei.event.NEIRegisterHandlerInfosEvent;
 import codechicken.nei.recipe.HandlerInfo;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.Reference;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
-import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
-import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.integration.LibMods;
 import ruiseki.omoshiroikamo.core.integration.nei.IRecipeHandlerBase;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensBlocks;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenBreedingRecipeHandler;
@@ -41,13 +27,6 @@ import ruiseki.omoshiroikamo.module.dml.integration.nei.SimulationChamberRecipeH
 import ruiseki.omoshiroikamo.module.ids.client.gui.container.TerminalGuiContainer;
 import ruiseki.omoshiroikamo.module.ids.integration.nei.TerminalOverlay;
 import ruiseki.omoshiroikamo.module.ids.integration.nei.TerminalPositioner;
-import ruiseki.omoshiroikamo.module.machinery.MachineryModule;
-import ruiseki.omoshiroikamo.module.machinery.client.nei.ModularMachineNEIHandler;
-import ruiseki.omoshiroikamo.module.machinery.client.nei.ModularRecipeNEIHandler;
-import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
-import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryItems;
-import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
-import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.NEIDimensionConfig;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumOreExtractorRecipeHandler;
@@ -56,46 +35,11 @@ import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumResExtract
 public class NEIConfig implements IConfigureNEI {
 
     /**
-     * Register handler info for Modular Machine NEI tab.
+     * Register handler info for the NEI recipe tabs of each module.
      * This controls the appearance of the recipe tab in NEI.
      */
     @SubscribeEvent
     public void registerHandlerInfo(NEIRegisterHandlerInfosEvent event) {
-        if (BackportConfigs.enableMachinery && LibMods.BlockRenderer6343.isLoaded()) {
-            // Register icon for the generic preview handler
-            event.registerHandlerInfo(
-                new HandlerInfo.Builder(ModularMachineNEIHandler.class.getName(), Reference.MOD_NAME, Reference.MOD_ID)
-                    .setDisplayStack(getStructureLibTrigger())
-                    .setHeight(168)
-                    .setWidth(192)
-                    .setShiftY(6)
-                    .build());
-
-            // Register icons for EACH structure (because they use separate IDs in
-            // getOverlayIdentifier)
-            for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
-                String handlerID = "modular_structure_" + structureName;
-                event.registerHandlerInfo(
-                    new HandlerInfo.Builder(handlerID, Reference.MOD_NAME, Reference.MOD_ID)
-                        .setDisplayStack(getStructureLibTrigger())
-                        .setHeight(168)
-                        .setWidth(192)
-                        .setShiftY(6)
-                        .build());
-            }
-
-            // Register dynamic Modular Machine recipe groups
-            for (String group : MachineryModule.getCachedGroupNames()) {
-                String handlerID = "modular_" + group;
-                event.registerHandlerInfo(
-                    new HandlerInfo.Builder(handlerID, Reference.MOD_NAME, Reference.MOD_ID)
-                        .setDisplayStack(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()))
-                        .setHeight(100)
-                        .setWidth(166)
-                        .build());
-            }
-        }
-
         if (BackportConfigs.enableMultiBlock) {
             for (int i = 0; i < 6; i++) {
                 String oreId = ModObject.QUANTUM_ORE_EXTRACTOR.getRegistryName() + ".tier" + i;
@@ -212,142 +156,6 @@ public class NEIConfig implements IConfigureNEI {
             registerHandler(new LootFabricatorRecipeHandler());
             registerHandler(new SimulationChamberRecipeHandler());
         }
-
-        if (BackportConfigs.enableMachinery) {
-            // Structure preview handlers are registered later (after CustomStructureRegistry.registerAll())
-            // via registerStructurePreviews() called from OmoshiroiKamo.postInit()
-
-            // Register Modular Machine Recipes (JSON)
-            registerModularMachineryRecipes();
-        }
-    }
-
-    /**
-     * Register ModularMachineNEIHandler instances for each known structure.
-     * Must be called AFTER CustomStructureRegistry.registerAll() (i.e., after StructureCompat.postInit()).
-     *
-     * TODO: Fix catalyst blueprints appear briefly in left tab then disappear.
-     * TODO: Enable 'P' button in structure preview (Name is currently null)
-     */
-    public static void registerStructurePreviews() {
-        if (!BackportConfigs.enableMachinery || !LibMods.BlockRenderer6343.isLoaded()) return;
-        if (!FMLCommonHandler.instance()
-            .getEffectiveSide()
-            .isClient()) return;
-
-        for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
-            ModularMachineNEIHandler handler = new ModularMachineNEIHandler(structureName);
-            API.registerUsageHandler(handler);
-
-            String recipeID = handler.getHandlerId();
-            ItemStack blueprint = ItemMachineBlueprint
-                .createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName);
-            ItemStack controller = new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
-
-            API.addRecipeCatalyst(blueprint, recipeID);
-            API.addRecipeCatalyst(controller, recipeID);
-        }
-
-        Logger.info(
-            "NEIConfig: registered {} structure preview handler(s)",
-            CustomStructureRegistry.getRegisteredNames()
-                .size());
-    }
-
-    private static Set<String> registeredModularGroups = new HashSet<>();
-
-    private void registerModularMachineryRecipes() {
-        if (FMLCommonHandler.instance()
-            .getEffectiveSide()
-            .isServer()) return;
-        List<String> groups = new ArrayList<>(MachineryModule.getCachedGroupNames());
-
-        List<IModularRecipe> allRecipes = RecipeLoader.getInstance()
-            .getAllRecipes();
-        for (IModularRecipe recipe : allRecipes) {
-            String group = recipe.getRecipeGroup();
-            if (!groups.contains(group)) {
-                groups.add(group);
-            }
-        }
-
-        for (String group : groups) {
-            if (registeredModularGroups.contains(group)) continue;
-            registeredModularGroups.add(group);
-
-            ModularRecipeNEIHandler handler = new ModularRecipeNEIHandler(group);
-            registerHandler(handler);
-
-            ItemStack catalyst = new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
-            API.addRecipeCatalyst(catalyst, handler.getRecipeID());
-            for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
-                IStructureEntry entry = StructureManager.getInstance()
-                    .getCustomStructure(structureName);
-                if (entry != null && entry.getRecipeGroup() != null
-                    && entry.getRecipeGroup()
-                        .contains(group)) {
-                    ItemStack blueprint = ItemMachineBlueprint
-                        .createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName);
-                    API.addRecipeCatalyst(blueprint, handler.getRecipeID());
-                }
-            }
-        }
-    }
-
-    public static void reloadModularMachineryRecipes() {
-        if (FMLCommonHandler.instance()
-            .getEffectiveSide()
-            .isServer()) return;
-        if (!BackportConfigs.enableMachinery || !LibMods.BlockRenderer6343.isLoaded()) return;
-
-        List<String> groups = new ArrayList<>(MachineryModule.getCachedGroupNames());
-        List<IModularRecipe> allRecipes = RecipeLoader.getInstance()
-            .getAllRecipes();
-
-        for (IModularRecipe recipe : allRecipes) {
-            String group = recipe.getRecipeGroup();
-            if (!groups.contains(group)) {
-                groups.add(group);
-            }
-        }
-
-        for (String group : groups) {
-            if (registeredModularGroups.contains(group)) continue;
-            registeredModularGroups.add(group);
-
-            ModularRecipeNEIHandler handler = new ModularRecipeNEIHandler(group);
-            registerHandler(handler);
-
-            ItemStack catalyst = new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
-            API.addRecipeCatalyst(catalyst, handler.getRecipeID());
-
-            try {
-                Class<?> guiRecipeClass = Class.forName("codechicken.nei.recipe.GuiRecipe");
-                Method method = guiRecipeClass.getMethod("registerHandlerInfo", HandlerInfo.class);
-                method.invoke(
-                    null,
-                    new HandlerInfo.Builder(handler.getRecipeID(), Reference.MOD_NAME, Reference.MOD_ID)
-                        .setDisplayStack(catalyst)
-                        .setHeight(100)
-                        .setWidth(166)
-                        .build());
-            } catch (Throwable t) {
-                Logger.error("Failed to register handler info for group " + group);
-                Logger.info("Maybe incompatible NEI version is used");
-            }
-
-            for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
-                IStructureEntry entry = StructureManager.getInstance()
-                    .getCustomStructure(structureName);
-                if (entry != null && entry.getRecipeGroup() != null
-                    && entry.getRecipeGroup()
-                        .contains(group)) {
-                    ItemStack blueprint = ItemMachineBlueprint
-                        .createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName);
-                    API.addRecipeCatalyst(blueprint, handler.getRecipeID());
-                }
-            }
-        }
     }
 
     protected static void registerHandler(IRecipeHandlerBase handler) {
@@ -363,14 +171,6 @@ public class NEIConfig implements IConfigureNEI {
                 API.addRecipeCatalyst(catalyst, recipeId);
             }
         }
-    }
-
-    private static ItemStack getStructureLibTrigger() {
-        Item trigger = GameRegistry.findItem("structurelib", "item.structurelib.constructableTrigger");
-        if (trigger != null) {
-            return new ItemStack(trigger);
-        }
-        return new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
     }
 
     @Override

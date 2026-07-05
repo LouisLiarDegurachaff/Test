@@ -41,8 +41,6 @@ gui.progress=進捗: %.2f%%
 gui.efficiency=効率: %.2f%%
 gui.sunlightBlocked=空が見えない！
 gui.empty=空
-gui.energy_mode.rf=RF
-gui.energy_mode.eu=EU
 gui.energy_transfer=転送量: %s RF/t
 gui.mana_info=%d マナ
 gui.io.input=入力
@@ -52,7 +50,6 @@ gui.io.none=なし
 gui.io.isActivated=有効
 gui.io.enabled=有効
 gui.io.disabled=無効
-gui.sort_inventory=インベントリをソート
 gui.search_bar.tool_tip=右クリックで検索バーをクリア
 gui.syncNEI=NEIと同期
 gui.craftingState.idle=休止中
@@ -735,7 +732,6 @@ item.soot_covered_plate.name=煤まみれのプレート
 
 
 # Blocks
-tile.machine_casing.name=マシンケーシング
 tile.loot_fabricator.name=ルートファブリケーター
 tile.simulation_chamber.name=シミュレーションチャンバー
 
@@ -1215,15 +1211,11 @@ achievement.omoshiroikamo.craft_modifier_saturation.desc=満腹モディファ�
 # Wrench
 chat.omoshiroikamo.wrench_linked=レンチをコントローラにリンクしました: (%d, %d, %d)
 chat.omoshiroikamo.wrench_type_selected=ポートタイプを選択しました: %s
-chat.omoshiroikamo.port_io_set=外部ポート (%s) のIOを %s に設定しました
-chat.omoshiroikamo.port_error=外部ポート (%d, %d, %d) でエラーが発生しました！設定を確認してください。
 chat.omoshiroikamo.wrench_linked=座標 (%s, %s, %s) をリンクしました。
 chat.omoshiroikamo.wrench_unlinked=リンクを解除しました。
 
 
 # Gui
-gui.machinery.energy_used=消費電力: %s
-gui.machinery.use_ic2=IC2を使用
 
 
 # Status
@@ -1249,17 +1241,8 @@ gui.status.no_mana=マナが不足しています
 gui.status.unknown=不明なエラー
 
 # Machine Blueprint
-item.machineBlueprint.display.name.format=設計図: %s
-item.machineBlueprint.display.name.empty=空の設計図
 
-tooltip.machineBlueprint.structure=構造体: %s
-tooltip.machineBlueprint.valid=有効な構造体です
-tooltip.machineBlueprint.invalid=構造体が無効です
-tooltip.machineBlueprint.null=設計図に構造体が登録されていません
-tooltip.machineBlueprint.show=コントローラーに右クリックで構造体をホロ表示
-tooltip.machineBlueprint.build=コントローラーにシフト右クリックで建造
 
-message.machineBlueprint.empty=この設計図は白紙です
 
 
 # Port Types
@@ -1276,228 +1259,58 @@ gui.port_type.format=%s (%s)
 
 
 # NEI Dynamic Tier Display
-omoshiroikamo.nei.required_tiers=要求されるTier:
-omoshiroikamo.nei.tier_format=Tier %d
 
 
 # Tiles
-tile.modular_machine_controller.name=モジュラーマシンコントローラー
-tile.vis_bridge.name=ビスブリッジ
 
 
 # Machinery Casing Dynamic Localization
-machinery.casing.format=%s%s
-machinery.casing.modular=モジュラーマシンケーシング
-machinery.design.plain=マシンケーシング
-machinery.design.reinforced=補強マシンケーシング
-machinery.design.vented=放熱マシンケーシング
-machinery.design.circuitry=回路マシンケーシング
 
 
 # Item Input Port
-tile.modular_item_input.name=アイテム搬入口 ティア%d
 
 
 # Item Output Port
-tile.modular_item_output.name=アイテム搬出口 ティア%d
 
 
 # Fluid Input Port
-tile.modular_fluid_input.name=液体搬入口 ティア%d
 
 
 # Fluid Output Port
-tile.modular_fluid_output.name=液体搬出口 ティア%d
 
 
 # Energy Input Port
-tile.modular_energy_input.name=エネルギー搬入口 ティア%d
 
 
 # Energy Output Port
-tile.modular_energy_output.name=エネルギー搬出口 ティア%d
 
 
 # Gas Input Port
-tile.modular_gas_input.name=ガス搬入口 ティア%d
 
 
 # Gas Output Port
-tile.modular_gas_output.name=ガス搬出口 ティア%d
 
 
 # Mana Ports
-tile.modular_mana_input.name=マナ搬入口 ティア%d
-tile.modular_mana_output.name=マナ搬出口 ティア%d
 
 
 # Vis Ports
-tile.modular_vis_input.name=ビス搬入口 ティア%d
-tile.modular_vis_output.name=ビス搬出口 ティア%d
 
 
 # Essentia Ports
-tile.modular_essentia_input.name=エッセンシア搬入口 ティア%d
-tile.modular_essentia_output.name=エッセンシア搬出口 ティア%d
 
 
 # ME Ports
-tile.modular_item_output_me.me.name=MEアイテム搬出口
-tile.modular_fluid_output_me.me.name=ME液体搬出口
-tile.modular_essentia_input_me.me.name=MEエッセンシア搬入口
 waila.me.online=装置はオンラインです
 waila.me.no_channel=装置でチャンネルが見つかりません
 waila.me.offline=装置はオフラインです
-tooltip.me_output.desc=アイテムを直接MEネットワークに出力する
-tooltip.me_fluid_output.desc=液体を直接MEネットワークに出力する
-tooltip.me_output.wip=開発中
-tooltip.me_output.lag_warning=警告: MEネットワーク接続時にラグが発生する可能性があります
 
 
 # Tooltips
-tooltip.machinery.capacity=容量: %s
-tooltip.machinery.slots=スロット数: %s
-tooltip.machinery.mana_transfer=転送量: %s /t
 
 # Gas/Fluid
-tile.gas.helium.name=ヘリウム
-fluid.helium=ヘリウム
-tile.gas.neon.name=ネオン
-fluid.neon=ネオン
-tile.gas.argon.name=アルゴン
-fluid.argon=アルゴン
-tile.gas.krypton.name=クリプトン
-fluid.krypton=クリプトン
-tile.gas.xenon.name=キセノン
-fluid.xenon=キセノン
-tile.gas.radon.name=ラドン
-fluid.radon=ラドン
-tile.gas.oganesson.name=オガネソン
-fluid.oganesson=オガネソン
-tile.gas.fluorine.name=フッ素
-fluid.fluorine=フッ素
-tile.gas.chlorine.name=塩素
-fluid.chlorine=塩素
-tile.gas.hydrogen.name=水素
-fluid.hydrogen=水素
-tile.gas.oxygen.name=酸素
-fluid.oxygen=酸素
-tile.gas.nitrogen.name=窒素
-fluid.nitrogen=窒素
-tile.gas.carbon_dioxide.name=二酸化炭素
-fluid.carbon_dioxide=二酸化炭素
-tile.gas.steam.name=蒸気
-fluid.steam=蒸気
-tile.liquid.bromine.name=臭素
-fluid.bromine=臭素
-tile.liquid.iodine.name=ヨウ素
-fluid.iodine=ヨウ素
-tile.liquid.astatine.name=アスタチン
-fluid.astatine=アスタチン
-tile.liquid.tennessine.name=テネシン
-fluid.tennessine=テネシン
-tile.liquid.oil.name=石油
-fluid.oil=石油
-tile.liquid.fuel.name=燃料
-fluid.fuel=燃料
-tile.liquid.biofuel.name=バイオ燃料
-fluid.biofuel=バイオ燃料
-tile.liquid.ethanol.name=エタノール
-fluid.ethanol=エタノール
-tile.liquid.mana.name=マナ
-fluid.mana=マナ
 
 
 # Material Parts
-part.ingot.format=%sインゴット
-part.plate.format=%sプレート
-part.gear.format=%sギア
-part.dust.format=%s粉末
 
 # Materials
-material.neutronium=ニュートロニウム
-material.lithium=リチウム
-material.beryllium=ベリリウム
-material.boron=ホウ素
-material.sodium=ナトリウム
-material.magnesium=マグネシウム
-material.aluminium=アルミニウム
-material.silicon=シリコン
-material.phosphorus=リン
-material.sulfur=硫黄
-material.titanium=チタン
-material.vanadium=バナジウム
-material.chromium=クロム
-material.manganese=マンガン
-material.cobalt=コバルト
-material.nickel=ニッケル
-material.copper=銅
-material.zinc=亜鉛
-material.gallium=ガリウム
-material.germanium=ゲルマニウム
-material.arsenic=ヒ素
-material.zirconium=ジルコニウム
-material.niobium=ニオブ
-material.molybdenum=モリブデン
-material.ruthenium=ルテニウム
-material.rhodium=ロジウム
-material.palladium=パラジウム
-material.silver=銀
-material.indium=インジウム
-material.tin=スズ
-material.antimony=アンチモン
-material.europium=ユウロピウム
-material.holmium=ホルミウム
-material.tantalum=タンタル
-material.tungsten=タングステン
-material.rhenium=レニウム
-material.osmium=オスミウム
-material.iridium=イリジウム
-material.platinum=プラチナ
-material.lead=鉛
-material.polonium=ポロニウム
-material.radium=ラジウム
-material.thorium=トリウム
-material.uranium=ウラン
-material.obsidian=黒曜石
-material.bronze=ブロンズ
-material.wroughtiron=錬鉄
-material.graphite=グラファイト
-material.steel=スチール
-material.cupronickel=キュプロニッケル
-material.kanthal=カンタル
-material.ingap=インジウム燐
-material.galliumarsenide=ヒ化ガリウム
-material.invar=インバー
-material.magnalium=マグナリウム
-material.stainlesssteel=ステンレススチール
-material.tungstensteel=タングステンスチール
-material.vanadiumsteel=バナジウムスチール
-material.blacksteel=ブラックスチール
-material.bluesteel=ブルースチール
-material.redsteel=レッドスチール
-material.rosegold=ローズゴールド
-material.platinumalloy=プラチナ合金
-material.titaniumalloy=チタン合金
-material.chromiumchloride=塩化クロム
-material.hss_g=HSS-G
-material.hss_s=HSS-S
-material.osmiridium=オスミリジウム
-material.rhodiumpalladium=ロジウムパラジウム
-material.thouranium=トウラニウム
-material.exciteduranium=励起ウラン
-material.toughalloy=タフアロイ
-material.adamantium=アダマンチウム
-material.aurarium=オーラリウム
-material.freezium=フリージウム
-material.enderalloy=エンダー合金
-material.chorusalloy=コーラス合金
-material.hihiirokane=ヒヒイロカネ
-material.opticallium=オプティカリウム
-material.orihalkon=オリハルコン
-material.paradox=パラドックス
-material.voidsteel=ボイドスチール
-material.vulcanium=ヴォルケニウム
-material.chlonox=クロノックス
-material.leviathan=リヴァイアサン
-material.perfect=パーフェクト

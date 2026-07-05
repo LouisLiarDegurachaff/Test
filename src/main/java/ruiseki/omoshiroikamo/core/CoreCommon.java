@@ -7,6 +7,7 @@ import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.core.event.TickHandler;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.network.PacketHandler;
+import ruiseki.omoshiroikamo.core.network.PacketToggleSide;
 import ruiseki.omoshiroikamo.core.network.packet.PacketClientFlight;
 import ruiseki.omoshiroikamo.core.network.packet.PacketCraftingState;
 import ruiseki.omoshiroikamo.core.network.packet.PacketEnergy;
@@ -39,6 +40,9 @@ public class CoreCommon extends CommonProxyComponent {
         // Server
         packetHandler.register(PacketQuickDraw.class);
         packetHandler.register(PacketSyncCarriedItem.class);
+        // Used by ItemWrench for any ISidedIO tile; previously registered by
+        // the machinery module before it was split out into OK Modular.
+        packetHandler.register(PacketToggleSide.class);
 
         packetHandler.register(PacketSound.class);
 

@@ -41,8 +41,6 @@ gui.progress=Progress: %.1f%%
 gui.efficiency=Efficiency: %.1f%%
 gui.sunlightBlocked=Sky Blocked!
 gui.empty=Empty
-gui.energy_mode.rf=RF
-gui.energy_mode.eu=EU
 gui.energy_transfer=Transfer: %s RF/t
 gui.mana_info=%d Mana
 gui.io.input=Input
@@ -52,7 +50,6 @@ gui.io.none=None
 gui.io.isActivated=Active
 gui.io.enabled=Enabled
 gui.io.disabled=Disabled
-gui.sort_inventory=Sort Inventory
 gui.search_bar.tool_tip=Right click to clear the search bar
 gui.syncNEI=Sync NEI
 gui.craftingState.idle=Idle
@@ -735,7 +732,6 @@ item.soot_covered_plate.name=Soot-covered Plate
 
 
 # Blocks
-tile.machine_casing.name=Machine Casing
 tile.loot_fabricator.name=Loot Fabricator
 tile.simulation_chamber.name=Simulation Chamber
 
@@ -1215,15 +1211,11 @@ achievement.omoshiroikamo.craft_modifier_saturation.desc=Craft a Saturation Modi
 # Wrench
 chat.omoshiroikamo.wrench_linked=Wrench linked to Controller at (%d, %d, %d)
 chat.omoshiroikamo.wrench_type_selected=Selected port type: %s
-chat.omoshiroikamo.port_io_set=External %s port IO set to: %s
-chat.omoshiroikamo.port_error=External port error at (%d, %d, %d)! Please check your configuration.
 chat.omoshiroikamo.wrench_linked=Coordinate (%s, %s, %s) linked.
 chat.omoshiroikamo.wrench_unlinked=Unlinked.
 
 
 # Gui
-gui.machinery.energy_used=Energy Used: %s
-gui.machinery.use_ic2=Use IC2
 
 
 # Status
@@ -1250,17 +1242,8 @@ gui.status.unknown=Unknown error
 
 
 # Machine Blueprint
-item.machineBlueprint.display.name.format=Blueprint: %s
-item.machineBlueprint.display.name.empty=Blank Blueprint
 
-tooltip.machineBlueprint.structure=Structure: %s
-tooltip.machineBlueprint.valid=Valid structure definition
-tooltip.machineBlueprint.invalid=Structure not found!
-tooltip.machineBlueprint.null=Blueprint is blank!
-tooltip.machineBlueprint.show=Right-click controller to show structure
-tooltip.machineBlueprint.build=Sneak+Right-click controller to build
 
-message.machineBlueprint.empty=This blueprint is blank
 
 
 # Port Types
@@ -1277,230 +1260,58 @@ gui.port_type.format=%s (%s)
 
 
 # NEI Dynamic Tier Display
-omoshiroikamo.nei.required_tiers=Required Tiers:
-omoshiroikamo.nei.tier_format=Tier %d
 
 
 # Tiles
-tile.modular_machine_controller.name=Machine Controller
-tile.vis_bridge.name=Vis Bridge
 
 
 # Machinery Casing Dynamic Localization
-machinery.casing.format=%s %s
-machinery.casing.modular=Modular Machine Casing
-machinery.design.plain=Machine Casing
-machinery.design.reinforced=Reinforced Machine Casing
-machinery.design.vented=Vented Machine Casing
-machinery.design.circuitry=Circuitry Machine Casing
 
 
 # Item Input Port
-tile.modular_item_input.name=Item Input Port Tier %d
 
 
 # Item Output Port
-tile.modular_item_output.name=Item Output Port Tier %d
 
 
 # Fluid Input Port
-tile.modular_fluid_input.name=Fluid Input Port Tier %d
 
 
 # Fluid Output Port
-tile.modular_fluid_output.name=Fluid Output Port Tier %d
 
 
 # Energy Input Port
-tile.modular_energy_input.name=Energy Input Port Tier %d
 
 
 # Energy Output Port
-tile.modular_energy_output.name=Energy Output Port Tier %d
 
 
 # Gas Input Port
-tile.modular_gas_input.name=Gas Input Port Tier %d
 
 
 # Gas Output Port
-tile.modular_gas_output.name=Gas Output Port Tier %d
 
 
 # Mana Ports
-tile.modular_mana_input.name=Mana Input Port Tier %d
-tile.modular_mana_output.name=Mana Output Port Tier %d
 
 
 # Vis Ports
-tile.modular_vis_input.name=Vis Input Relay Tier %d
-tile.modular_vis_output.name=Vis Output Relay Tier %d
 
 
 # Essentia Ports
-tile.modular_essentia_input.name=Essentia Input Port Tier %d
-tile.modular_essentia_output.name=Essentia Output Port Tier %d
 
 
 # ME Ports
-tile.modular_item_output_me.me.name=ME Item Output Port
-tile.modular_fluid_output_me.me.name=ME Fluid Output Port
-tile.modular_essentia_input_me.me.name=ME Essentia Input Port
 waila.me.online=Device Online
 waila.me.no_channel=Device Missing Channel
 waila.me.offline=Device Offline
-tooltip.me_output.desc=Outputs items directly to ME Network
-tooltip.me_fluid_output.desc=Outputs fluids directly to ME Network
-tooltip.me_output.wip=Work In Progress
-tooltip.me_output.lag_warning=Warning: May cause lag when connected to ME Network
 
 
 # Tooltips
-tooltip.machinery.capacity=Capacity: %s
-tooltip.machinery.slots=Slots: %s
-tooltip.machinery.mana_transfer=Transfer: %s /t
-tooltip.machinery.deprecated=§e[DEPRECATED]
-tooltip.machinery.deprecated.hint=§7This block uses the legacy system.
 
 # Gas/Fluid
-tile.gas.helium.name=Helium
-fluid.helium=Helium
-tile.gas.neon.name=Neon
-fluid.neon=Neon
-tile.gas.argon.name=Argon
-fluid.argon=Argon
-tile.gas.krypton.name=Krypton
-fluid.krypton=Krypton
-tile.gas.xenon.name=Xenon
-fluid.xenon=Xenon
-tile.gas.radon.name=Radon
-fluid.radon=Radon
-tile.gas.oganesson.name=Oganesson
-fluid.oganesson=Oganesson
-tile.gas.fluorine.name=Fluorine
-fluid.fluorine=Fluorine
-tile.gas.chlorine.name=Chlorine
-fluid.chlorine=Chlorine
-tile.gas.hydrogen.name=Hydrogen
-fluid.hydrogen=Hydrogen
-tile.gas.oxygen.name=Oxygen
-fluid.oxygen=Oxygen
-tile.gas.nitrogen.name=Nitrogen
-fluid.nitrogen=Nitrogen
-tile.gas.carbon_dioxide.name=Carbon Dioxide
-fluid.carbon_dioxide=Carbon Dioxide
-tile.gas.steam.name=Steam
-fluid.steam=Steam
-tile.liquid.bromine.name=Bromine
-fluid.bromine=Bromine
-tile.liquid.iodine.name=Iodine
-fluid.iodine=Iodine
-tile.liquid.astatine.name=Astatine
-fluid.astatine=Astatine
-tile.liquid.tennessine.name=Tennessine
-fluid.tennessine=Tennessine
-tile.liquid.oil.name=Oil
-fluid.oil=Oil
-tile.liquid.fuel.name=Fuel
-fluid.fuel=Fuel
-tile.liquid.biofuel.name=Biofuel
-fluid.biofuel=Biofuel
-tile.liquid.ethanol.name=Ethanol
-fluid.ethanol=Ethanol
-tile.liquid.mana.name=Mana
-fluid.mana=Mana
 
 
 # Material Parts
-part.ingot.format=%s Ingot
-part.plate.format=%s Plate
-part.gear.format=%s Gear
-part.dust.format=%s Dust
 
 # Materials
-material.neutronium=Neutronium
-material.lithium=Lithium
-material.beryllium=Beryllium
-material.boron=Boron
-material.sodium=Sodium
-material.magnesium=Magnesium
-material.aluminium=Aluminium
-material.silicon=Silicon
-material.phosphorus=Phosphorus
-material.sulfur=Sulfur
-material.titanium=Titanium
-material.vanadium=Vanadium
-material.chromium=Chromium
-material.manganese=Manganese
-material.cobalt=Cobalt
-material.nickel=Nickel
-material.copper=Copper
-material.zinc=Zinc
-material.gallium=Gallium
-material.germanium=Germanium
-material.arsenic=Arsenic
-material.zirconium=Zirconium
-material.niobium=Niobium
-material.molybdenum=Molybdenum
-material.ruthenium=Ruthenium
-material.rhodium=Rhodium
-material.palladium=Palladium
-material.silver=Silver
-material.indium=Indium
-material.tin=Tin
-material.antimony=Antimony
-material.europium=Europium
-material.holmium=Holmium
-material.tantalum=Tantalum
-material.tungsten=Tungsten
-material.rhenium=Rhenium
-material.osmium=Osmium
-material.iridium=Iridium
-material.platinum=Platinum
-material.lead=Lead
-material.polonium=Polonium
-material.radium=Radium
-material.thorium=Thorium
-material.uranium=Uranium
-material.obsidian=Obsidian
-material.bronze=Bronze
-material.wroughtiron=Wrought Iron
-material.graphite=Graphite
-material.steel=Steel
-material.cupronickel=Cupronickel
-material.kanthal=Kanthal
-material.ingap=Indium Gallium Phosphide
-material.galliumarsenide=Gallium Arsenide
-material.invar=Invar
-material.magnalium=Magnalium
-material.stainlesssteel=Stainless Steel
-material.tungstensteel=Tungsten Steel
-material.vanadiumsteel=Vanadium Steel
-material.blacksteel=Black Steel
-material.bluesteel=Blue Steel
-material.redsteel=Red Steel
-material.rosegold=Rose Gold
-material.platinumalloy=Platinum Alloy
-material.titaniumalloy=Titanium Alloy
-material.chromiumchloride=Chromium Chloride
-material.hss_g=HSS-G
-material.hss_s=HSS-S
-material.osmiridium=Osmiridium
-material.rhodiumpalladium=Rhodium Palladium
-material.thouranium=Thouranium
-material.exciteduranium=Excited Uranium
-material.toughalloy=Tough Alloy
-material.adamantium=Adamantium
-material.aurarium=Aurarium
-material.freezium=Freezium
-material.enderalloy=Ender Alloy
-material.chorusalloy=Chorus Alloy
-material.hihiirokane=Hihiirokane
-material.opticallium=Opticallium
-material.orihalkon=Orihalkon
-material.paradox=Paradox
-material.voidsteel=Void Steel
-material.vulcanium=Vulcanium
-material.chlonox=Chlonox
-material.leviathan=Leviathan
-material.perfect=Perfect
