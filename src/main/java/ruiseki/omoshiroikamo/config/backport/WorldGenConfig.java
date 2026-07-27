@@ -1,17 +1,13 @@
-package ruiseki.omoshiroikamo.config.backport.multiblock;
+package ruiseki.omoshiroikamo.config.backport;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
 import ruiseki.omoshiroikamo.Reference;
 
 @Config.Comment("Main MultiBlock WorldGen Settings")
-@Config.LangKey(Reference.CONFIG + "eTWorldGenConfig")
-@Config(
-    modid = Reference.MOD_ID,
-    category = "worldGen",
-    configSubDirectory = Reference.MOD_ID + "/multiblock",
-    filename = "worldgen")
-public class MultiblockWorldGenConfig {
+@Config.LangKey(Reference.CONFIG + "worldGenConfig")
+@Config(modid = Reference.MOD_ID, category = "worldGen", configSubDirectory = Reference.MOD_ID, filename = "worldgen")
+public class WorldGenConfig {
 
     @Config.Comment("Hardened Stone generation settings")
     @Config.LangKey(Reference.CONFIG + "hardenedStoneGen")

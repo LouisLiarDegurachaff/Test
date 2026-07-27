@@ -11,20 +11,20 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
-import ruiseki.omoshiroikamo.config.backport.multiblock.MultiblockWorldGenConfig;
+import ruiseki.omoshiroikamo.config.backport.WorldGenConfig;
 
 public class MultiblockWorldGenerator implements IWorldGenerator {
 
     public static final MultiblockWorldGenerator INSTANCE = new MultiblockWorldGenerator();
     private final WorldGenMinable hardened_stone = new WorldGenMinable(
         MultiBlockBlocks.BLOCK_HARDENED_STONE.getBlock(),
-        MultiblockWorldGenConfig.hardenedStone.nodeSize);
+        WorldGenConfig.hardenedStone.nodeSize);
     private final WorldGenMinable alabaster = new WorldGenMinable(
         MultiBlockBlocks.BLOCK_ALABASTER.getBlock(),
-        MultiblockWorldGenConfig.alabaster.nodeSize);
+        WorldGenConfig.alabaster.nodeSize);
     private final WorldGenMinable basalt = new WorldGenMinable(
         MultiBlockBlocks.BLOCK_BASALT.getBlock(),
-        MultiblockWorldGenConfig.basalt.nodeSize);
+        WorldGenConfig.basalt.nodeSize);
 
     public static void preInit() {
         GameRegistry.registerWorldGenerator(INSTANCE, 0);
@@ -37,40 +37,40 @@ public class MultiblockWorldGenerator implements IWorldGenerator {
 
             if (BackportConfigs.enableMultiBlock) {
 
-                if (MultiblockWorldGenConfig.hardenedStone.enable) {
+                if (WorldGenConfig.hardenedStone.enable) {
                     this.runGeneration(
                         this.hardened_stone,
                         world,
                         random,
                         chunkX,
                         chunkZ,
-                        MultiblockWorldGenConfig.hardenedStone.nodes,
-                        MultiblockWorldGenConfig.hardenedStone.minHeight,
-                        MultiblockWorldGenConfig.hardenedStone.maxHeight);
+                        WorldGenConfig.hardenedStone.nodes,
+                        WorldGenConfig.hardenedStone.minHeight,
+                        WorldGenConfig.hardenedStone.maxHeight);
                 }
 
-                if (MultiblockWorldGenConfig.alabaster.enable) {
+                if (WorldGenConfig.alabaster.enable) {
                     this.runGeneration(
                         this.alabaster,
                         world,
                         random,
                         chunkX,
                         chunkZ,
-                        MultiblockWorldGenConfig.alabaster.nodes,
-                        MultiblockWorldGenConfig.alabaster.minHeight,
-                        MultiblockWorldGenConfig.alabaster.maxHeight);
+                        WorldGenConfig.alabaster.nodes,
+                        WorldGenConfig.alabaster.minHeight,
+                        WorldGenConfig.alabaster.maxHeight);
                 }
 
-                if (MultiblockWorldGenConfig.basalt.enable) {
+                if (WorldGenConfig.basalt.enable) {
                     this.runGeneration(
                         this.basalt,
                         world,
                         random,
                         chunkX,
                         chunkZ,
-                        MultiblockWorldGenConfig.basalt.nodes,
-                        MultiblockWorldGenConfig.basalt.minHeight,
-                        MultiblockWorldGenConfig.basalt.maxHeight);
+                        WorldGenConfig.basalt.nodes,
+                        WorldGenConfig.basalt.minHeight,
+                        WorldGenConfig.basalt.maxHeight);
                 }
             }
 

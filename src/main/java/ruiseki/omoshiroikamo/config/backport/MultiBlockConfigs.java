@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.config.backport;
 import com.gtnewhorizon.gtnhlib.config.ConfigException;
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 
-import ruiseki.omoshiroikamo.config.backport.multiblock.MultiblockWorldGenConfig;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
 import ruiseki.omoshiroikamo.config.backport.multiblock.SolarArrayConfig;
@@ -17,6 +16,5 @@ public class MultiBlockConfigs {
         ConfigurationManager.registerConfig(QuantumBeaconConfig.class);
         ConfigurationManager.registerConfig(QuantumExtractorConfig.class);
         ConfigurationManager.registerConfig(SolarArrayConfig.class);
-        ConfigurationManager.registerConfig(MultiblockWorldGenConfig.class);
     }
 }
