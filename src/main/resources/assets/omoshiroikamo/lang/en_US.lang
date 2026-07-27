@@ -139,7 +139,6 @@ command.ok.noConfigsFound=There were no config values found that can be set
 command.ok.main_usage_title=Usage:
 command.ok.main_usage_multiblock=/ok multiblock - Multiblock management commands
 command.ok.main_usage_multiblock_reload=/ok multiblock reload - Reload multiblock data
-command.ok.main_usage_modular_reload=/ok modular reload - Reload modular data
 
 command.ok.reloading=[OmoshiroiKamo] Reloading configurations...
 command.ok.reload_success=[OmoshiroiKamo] Configurations reloaded successfully!
@@ -183,7 +182,7 @@ command.ok.usage_scan=/ok multiblock scan <name> <x1> <y1> <z1> <x2> <y2> <z2> -
 command.ok.usage_wand_save=/ok multiblock wand save <name> - Save wand selection to JSON
 
 command.ok.wand_players_only=[OmoshiroiKamo] This command can only be used by players!
-command.ok.wand_usage=Usage: /ok structure wand save <name>
+command.ok.wand_usage=Usage: /ok multiblock wand save <name>
 command.ok.wand_no_pending=[OmoshiroiKamo] No pending scan! Use the Structure Wand first.
 command.ok.wand_different_dimension=[OmoshiroiKamo] Selection is in a different dimension!
 command.ok.wand_scanning=[OmoshiroiKamo] Scanning %d blocks...
@@ -1206,10 +1205,6 @@ achievement.omoshiroikamo.craft_modifier_saturation.desc=Craft a Saturation Modi
 
 # Modular machines ==============================================
 
-
-# Gui
-
-
 # Status
 gui.status.insert_blueprint=Insert Blueprint
 gui.status.structure_mismatch=Structure mismatch
@@ -1231,66 +1226,3 @@ gui.status.input_missing=Input missing
 gui.status.missing_blueprint=No Blueprint
 gui.status.no_mana=Insufficient Mana
 gui.status.unknown=Unknown error
-
-
-# Machine Blueprint
-
-
-
-
-# NEI Dynamic Tier Display
-
-
-# Tiles
-
-
-# Machinery Casing Dynamic Localization
-
-
-# Item Input Port
-
-
-# Item Output Port
-
-
-# Fluid Input Port
-
-
-# Fluid Output Port
-
-
-# Energy Input Port
-
-
-# Energy Output Port
-
-
-# Gas Input Port
-
-
-# Gas Output Port
-
-
-# Mana Ports
-
-
-# Vis Ports
-
-
-# Essentia Ports
-
-
-# ME Ports
-waila.me.online=Device Online
-waila.me.no_channel=Device Missing Channel
-waila.me.offline=Device Offline
-
-
-# Tooltips
-
-# Gas/Fluid
-
-
-# Material Parts
-
-# Materials

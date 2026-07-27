@@ -27,7 +27,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  * 
  * <pre>
  * {@code
- * // In MachineryIntegration
+ * // In a module's integration hook
  * if (LibMods.EnderIO.isLoaded()) {
  *     EnergyIntegrationRegistry.registerDelegate(new IEnergyIntegrationDelegate() {
  *         public Integer tryExtract(Object te, ForgeDirection side, int amount, boolean simulate) {

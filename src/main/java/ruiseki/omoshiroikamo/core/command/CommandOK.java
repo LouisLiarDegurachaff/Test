@@ -34,9 +34,5 @@ public class CommandOK extends CommandMod {
             sender,
             "command.ok.main_usage_multiblock_reload",
             EnumChatFormatting.WHITE.toString() + "  ");
-        sendLocalizedMessage(
-            sender,
-            "command.ok.main_usage_modular_reload",
-            EnumChatFormatting.WHITE.toString() + "  ");
     }
 }
