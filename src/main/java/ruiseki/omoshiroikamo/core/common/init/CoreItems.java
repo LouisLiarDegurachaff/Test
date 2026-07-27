@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.item.ItemFluidCanister;
 import ruiseki.omoshiroikamo.core.item.ItemStructureWand;
 import ruiseki.omoshiroikamo.core.item.ItemWrench;
 
@@ -16,7 +15,6 @@ public enum CoreItems {
 
     STRUCTURE_WAND(new ItemStructureWand()),
     WRENCH(new ItemWrench()),
-    FLUID_CANISTER(new ItemFluidCanister()),
 
     ;
     // spotless: on

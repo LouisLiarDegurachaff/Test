@@ -28,8 +28,4 @@ public class ItemConfigs {
     @Config.DefaultFloat(16.0f)
     @Config.RangeFloat(min = 0.0f, max = 1024.0f)
     public static float wandPreviewReach;
-
-    @Config.Comment("Show filled canisters for all registered fluids in Creative tab and NEI. If false, only the empty canister is shown.")
-    @Config.DefaultBoolean(false)
-    public static boolean showAllCanisters;
 }

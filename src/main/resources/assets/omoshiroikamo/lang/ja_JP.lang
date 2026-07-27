@@ -76,7 +76,6 @@ gui.sort_order.desc=降順
 # Items
 item.wrench.name=レンチ
 item.structure_wand.name=ストラクチャーワンド
-item.fluid_canister.name=流体キャニスター
 
 
 # Tooltips

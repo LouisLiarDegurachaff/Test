@@ -74,7 +74,6 @@ gui.sort_order.desc=Descending
 # Items
 item.wrench.name=Wrench
 item.structure_wand.name=Structure Wand
-item.fluid_canister.name=Fluid Canister
 
 
 # Tooltips
