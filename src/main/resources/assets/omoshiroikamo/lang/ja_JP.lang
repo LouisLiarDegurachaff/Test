@@ -1207,13 +1207,6 @@ achievement.omoshiroikamo.craft_modifier_saturation.desc=満腹モディファ�
 # Modular machines ==============================================
 
 
-# Wrench
-chat.omoshiroikamo.wrench_linked=レンチをコントローラにリンクしました: (%d, %d, %d)
-chat.omoshiroikamo.wrench_type_selected=ポートタイプを選択しました: %s
-chat.omoshiroikamo.wrench_linked=座標 (%s, %s, %s) をリンクしました。
-chat.omoshiroikamo.wrench_unlinked=リンクを解除しました。
-
-
 # Gui
 
 
@@ -1245,16 +1238,6 @@ gui.status.unknown=不明なエラー
 
 
 # Port Types
-gui.port_type.ITEM=アイテム
-gui.port_type.FLUID=液体
-gui.port_type.ENERGY=エネルギー
-gui.port_type.MANA=マナ
-gui.port_type.GAS=気体
-gui.port_type.ESSENTIA=エッセンシア
-gui.port_type.VIS=ビス
-gui.port_type.BLOCK=ブロック
-gui.port_type=%s タイプのポートを選択中
-gui.port_type.format=%s (%s)
 
 
 # NEI Dynamic Tier Display

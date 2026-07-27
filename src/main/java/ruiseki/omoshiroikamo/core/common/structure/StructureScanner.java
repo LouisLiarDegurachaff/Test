@@ -16,7 +16,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 
-import ruiseki.omoshiroikamo.api.modular.IMachineController;
 import ruiseki.omoshiroikamo.api.structure.core.BlockMapping;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.StructureEntryBuilder;
@@ -80,15 +79,6 @@ public class StructureScanner {
                     String blockName = Block.blockRegistry.getNameForObject(block);
                     if (blockName == null || "minecraft:air".equals(blockName)) {
                         row.append(' ');
-                        continue;
-                    }
-
-                    // Special Case: Controller
-                    if (tile instanceof IMachineController) {
-                        row.append('Q');
-                        if (!symbolToBlock.containsKey('Q')) {
-                            symbolToBlock.put('Q', getBlockId(block, meta));
-                        }
                         continue;
                     }
 

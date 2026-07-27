@@ -1207,13 +1207,6 @@ achievement.omoshiroikamo.craft_modifier_saturation.desc=Craft a Saturation Modi
 # Modular machines ==============================================
 
 
-# Wrench
-chat.omoshiroikamo.wrench_linked=Wrench linked to Controller at (%d, %d, %d)
-chat.omoshiroikamo.wrench_type_selected=Selected port type: %s
-chat.omoshiroikamo.wrench_linked=Coordinate (%s, %s, %s) linked.
-chat.omoshiroikamo.wrench_unlinked=Unlinked.
-
-
 # Gui
 
 
@@ -1243,19 +1236,6 @@ gui.status.unknown=Unknown error
 # Machine Blueprint
 
 
-
-
-# Port Types
-gui.port_type.ITEM=Item
-gui.port_type.FLUID=Fluid
-gui.port_type.ENERGY=Energy
-gui.port_type.MANA=Mana
-gui.port_type.GAS=Gas
-gui.port_type.ESSENTIA=Essentia
-gui.port_type.VIS=Vis
-gui.port_type.BLOCK=Block
-gui.port_type=Selected Port Type: %s
-gui.port_type.format=%s (%s)
 
 
 # NEI Dynamic Tier Display

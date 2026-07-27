@@ -4,17 +4,12 @@ import static com.gtnewhorizon.structurelib.structure.StructureUtility.isAir;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlockAnyMeta;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofChain;
-import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofTileAdder;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 
 import com.gtnewhorizon.structurelib.structure.AutoPlaceEnvironment;
@@ -22,12 +17,6 @@ import com.gtnewhorizon.structurelib.structure.IStructureElement;
 import com.gtnewhorizon.structurelib.structure.IStructureElementChain;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import ruiseki.omoshiroikamo.api.modular.IMachineController;
-import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
-import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 /**
@@ -35,28 +24,6 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
  * and creating StructureLib elements dynamically.
  */
 public class BlockResolver {
-
-    /**
-     * Functional interface for creating specialized proxy ports.
-     */
-    @FunctionalInterface
-    public interface IProxyFactory {
-
-        IModularPort create(IMachineController controller, ChunkCoordinates coords, TileEntity tile, EnumIO io);
-    }
-
-    private static final Map<IPortType.Type, IProxyFactory> PROXY_FACTORIES = new HashMap<>();
-
-    public static void registerProxyFactory(IPortType.Type type, IProxyFactory factory) {
-        PROXY_FACTORIES.put(type, factory);
-    }
-
-    // Hint block used by ofTileAdder — registered by MachineryModule.preInit()
-    private static Block hintBlock = null;
-
-    public static void registerHintBlock(Block block) {
-        hintBlock = block;
-    }
 
     /**
      * Resolve a block and metadata from a "mod:block:meta" string.
@@ -202,127 +169,6 @@ public class BlockResolver {
     }
 
     /**
-     * Create a chain element from multiple block strings with TileEntity detection.
-     * This allows any of the specified blocks to be valid at this position,
-     * and automatically collects IModularPort TileEntities.
-     *
-     * @param blockStrings List of block strings
-     * @return IStructureElement using ofChain with TileAdder, or null if all invalid
-     */
-    @SuppressWarnings("unchecked")
-    public static <T extends IMachineController> IStructureElement<T> createChainElementWithTileAdder(
-        List<String> blockStrings) {
-        if (blockStrings == null || blockStrings.isEmpty()) {
-            return null;
-        }
-
-        List<IStructureElement<T>> elements = new ArrayList<>();
-
-        if (hintBlock == null) {
-            Logger.warn("BlockResolver: no hint block registered — call registerHintBlock() in preInit");
-        }
-
-        // TileAdder uses IMachineController; safe to cast since T extends IMachineController
-        elements.add(
-            new NoHintStructureElement<>(
-                (IStructureElement<T>) (IStructureElement<?>) ofTileAdder(BlockResolver::collectPort, hintBlock, 0)));
-
-        // Then add block checks for each valid block type
-        for (String blockString : blockStrings) {
-            IStructureElement<T> element = createElement(blockString);
-            if (element != null) {
-                elements.add(element);
-            }
-        }
-
-        if (elements.size() <= 1) {
-            // Only TileAdder, no valid blocks - return null
-            return null;
-        }
-
-        return ofChain(elements.toArray(new IStructureElement[0]));
-    }
-
-    /**
-     * Callback for ofTileAdder to collect IModularPort TileEntities.
-     * Called during structure check for each block position.
-     *
-     * @param controller The machine controller
-     * @param tile       The TileEntity at this position (may be null)
-     * @return true if the position is valid (port found), false to let block check
-     *         handle it
-     */
-    public static boolean collectPort(IMachineController controller, TileEntity tile) {
-        if (tile == null) {
-            return false;
-        }
-
-        // 1. Direct Modular Ports
-        if (tile instanceof IModularPort port) {
-            return registerPort(controller, port, tile.xCoord, tile.yCoord, tile.zCoord);
-        }
-
-        // 2. Proxy Ports (External Blocks)
-        ChunkCoordinates coords = new ChunkCoordinates(tile.xCoord, tile.yCoord, tile.zCoord);
-        Map<ChunkCoordinates, Map<IPortType.Type, EnumIO>> externalConfigs = controller.getExternalPortConfigs();
-        if (externalConfigs == null || !externalConfigs.containsKey(coords)) return false;
-
-        Map<IPortType.Type, EnumIO> types = externalConfigs.get(coords);
-        if (types == null || types.isEmpty()) return false;
-
-        boolean registeredAny = false;
-        for (Map.Entry<IPortType.Type, EnumIO> typeEntry : types.entrySet()) {
-            IPortType.Type type = typeEntry.getKey();
-            EnumIO io = typeEntry.getValue();
-            if (io == null || io == EnumIO.NONE) continue;
-
-            IProxyFactory factory = PROXY_FACTORIES.get(type);
-            if (factory == null) continue;
-
-            IModularPort proxy = factory.create(controller, coords, tile, io);
-            if (proxy != null) {
-                registeredAny |= registerPort(controller, proxy, tile.xCoord, tile.yCoord, tile.zCoord);
-            }
-        }
-        return registeredAny;
-    }
-
-    /**
-     * Helper to register a port in the controller based on its direction.
-     */
-    private static boolean registerPort(IMachineController controller, IModularPort port, int x, int y, int z) {
-        // Resolve index from symbol at position
-        Character symbol = controller.getSymbolAt(x, y, z);
-        if (symbol != null) {
-            String structureName = controller.getStructurePieceName();
-            IStructureEntry entry = StructureManager.getInstance()
-                .getCustomStructure(structureName);
-            if (entry != null) {
-                ISymbolMapping mapping = entry.getMappings()
-                    .get(symbol);
-                if (mapping != null) {
-                    int portIdx = mapping.getPortIndex();
-                    port.setAssignedIndex(portIdx);
-                }
-            }
-        }
-
-        IPortType.Direction direction = port.getPortDirection();
-        switch (direction) {
-            case INPUT -> controller.addPortFromStructure(port, true);
-            case OUTPUT -> controller.addPortFromStructure(port, false);
-            case BOTH -> {
-                controller.addPortFromStructure(port, true);
-                controller.addPortFromStructure(port, false);
-            }
-            case NONE -> {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
      * Wrap an element to track its position in the controller on success.
      */
     private static <T> IStructureElement<T> withTracking(IStructureElement<T> element) {
@@ -382,18 +228,7 @@ public class BlockResolver {
 
         @Override
         public boolean check(T t, World world, int x, int y, int z) {
-            boolean result = wrappedElement.check(t, world, x, y, z);
-
-            if (result) {
-                if (t instanceof IMachineController controller) {
-                    controller.trackStructureBlock(x, y, z);
-
-                    // Always try to collect port if it's a valid structure block
-                    TileEntity tile = world.getTileEntity(x, y, z);
-                    BlockResolver.collectPort(controller, tile);
-                }
-            }
-            return result;
+            return wrappedElement.check(t, world, x, y, z);
         }
 
         @Override
@@ -417,47 +252,6 @@ public class BlockResolver {
         public IStructureElement<T>[] fallbacks() {
             // Expose the wrapped element to NEI's StructureHacks via the chain interface
             return new IStructureElement[] { wrappedElement };
-        }
-    }
-
-    /**
-     * A wrapper that suppresses the spawnHint of the underlying element.
-     * Used for TileAdder to prevent it from drawing a duplicate
-     */
-    private static class NoHintStructureElement<T> implements IStructureElementChain<T> {
-
-        private final IStructureElement<T> wrapped;
-
-        public NoHintStructureElement(IStructureElement<T> wrapped) {
-            this.wrapped = wrapped;
-        }
-
-        @Override
-        public boolean check(T t, World world, int x, int y, int z) {
-            return wrapped.check(t, world, x, y, z);
-        }
-
-        @Override
-        public boolean spawnHint(T t, World world, int x, int y, int z, ItemStack trigger) {
-            // Suppress hint rendering
-            return false;
-        }
-
-        @Override
-        public boolean placeBlock(T t, World world, int x, int y, int z, ItemStack trigger) {
-            return wrapped.placeBlock(t, world, x, y, z, trigger);
-        }
-
-        @Override
-        public BlocksToPlace getBlocksToPlace(T t, World world, int x, int y, int z, ItemStack trigger,
-            AutoPlaceEnvironment env) {
-            return wrapped.getBlocksToPlace(t, world, x, y, z, trigger, env);
-        }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public IStructureElement<T>[] fallbacks() {
-            return new IStructureElement[] { wrapped };
         }
     }
 

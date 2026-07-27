@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.core.integration.structureLib;
 
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
-import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumBeacon.QuantumBeaconStructure;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.ore.QuantumOreExtractorStructure;
@@ -17,10 +16,6 @@ public class StructureCompat {
             QuantumResExtractorStructure.registerStructureInfo();
             QuantumBeaconStructure.registerStructureInfo();
         }
-
-        // Register custom structures from JSON
-        // Note: IMultiblockInfoContainer for TEMachineController is registered by MachineryModule.postInit()
-        CustomStructureRegistry.registerAll();
     }
 
     /**
@@ -34,9 +29,6 @@ public class StructureCompat {
             QuantumResExtractorStructure.registerStructureInfo();
             QuantumBeaconStructure.registerStructureInfo();
         }
-
-        // Reload custom structures from JSON
-        CustomStructureRegistry.registerAll();
 
         Logger.info("StructureLib definitions reloaded");
     }

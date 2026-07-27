@@ -3,9 +3,7 @@ package ruiseki.omoshiroikamo.core.item;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -13,9 +11,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cofh.api.item.IToolHammer;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.modular.IMachineController;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.network.PacketToggleSide;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 
@@ -36,73 +31,19 @@ public class ItemWrench extends ItemOK implements IToolHammer {
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
         float hitX, float hitY, float hitZ) {
-        TileEntity te = world.getTileEntity(x, y, z);
-
-        // 1. Shift + Right Click on Block: Linking / Registration
         if (player.isSneaking()) {
-            // Case A: Controller linking
-            if (te instanceof IMachineController) {
-                if (!world.isRemote) {
-                    NBTTagCompound nbt = stack.getTagCompound();
-                    if (nbt == null) {
-                        nbt = new NBTTagCompound();
-                    }
-                    nbt.setInteger("LinkedX", x);
-                    nbt.setInteger("LinkedY", y);
-                    nbt.setInteger("LinkedZ", z);
-                    nbt.setInteger("LinkedDim", world.provider.dimensionId);
-                    stack.setTagCompound(nbt);
-                    player.addChatMessage(new ChatComponentTranslation("chat.omoshiroikamo.wrench_linked", x, y, z));
-                    return true;
-                }
-                return false;
-            }
+            return false;
+        }
 
-            // Case B: External Port Registration
-            if (stack.hasTagCompound() && stack.getTagCompound()
-                .hasKey("LinkedX")) {
-                int cx = stack.getTagCompound()
-                    .getInteger("LinkedX");
-                int cy = stack.getTagCompound()
-                    .getInteger("LinkedY");
-                int cz = stack.getTagCompound()
-                    .getInteger("LinkedZ");
-                int cDim = stack.getTagCompound()
-                    .getInteger("LinkedDim");
-
-                if (world.provider.dimensionId == cDim && (cx != x || cy != y || cz != z)) {
-                    TileEntity cte = world.getTileEntity(cx, cy, cz);
-                    if (cte instanceof IMachineController) {
-                        if (!world.isRemote) {
-                            IMachineController controller = (IMachineController) cte;
-                            controller.registerExternalPort(x, y, z, getSelectedPortType(stack), player);
-                            return true;
-                        }
-                        return false;
-                    } else {
-                        if (!world.isRemote) player.addChatMessage(
-                            new ChatComponentTranslation(
-                                "Debug: Linked TE is not Controller @ " + cx + "," + cy + "," + cz));
-                    }
-                } else {
-                    if (!world.isRemote) player.addChatMessage(
-                        new ChatComponentTranslation(
-                            "Debug: Linked pos mismatch. Dim: " + (world.provider.dimensionId == cDim)
-                                + " Self: "
-                                + (cx == x && cy == y && cz == z)));
-                }
+        // Right Click on Block: IO Toggle (Forward)
+        if (world.getTileEntity(x, y, z) instanceof ISidedIO io) {
+            if (world.isRemote) {
+                ForgeDirection clicked = ForgeDirection.getOrientation(side);
+                ForgeDirection target = getClickedSide(clicked, hitX, hitY, hitZ);
+                OmoshiroiKamo.instance.getPacketHandler()
+                    .sendToServer(new PacketToggleSide(io, target, false));
             }
-        } else {
-            // 2. Normal Right Click on Block: IO Toggle (Forward)
-            if (te instanceof ISidedIO io) {
-                if (world.isRemote) {
-                    ForgeDirection clicked = ForgeDirection.getOrientation(side);
-                    ForgeDirection target = getClickedSide(clicked, hitX, hitY, hitZ);
-                    OmoshiroiKamo.instance.getPacketHandler()
-                        .sendToServer(new PacketToggleSide(io, target, false));
-                }
-                return true;
-            }
+            return true;
         }
 
         return false;
@@ -114,57 +55,25 @@ public class ItemWrench extends ItemOK implements IToolHammer {
         TileEntity te = world.getTileEntity(x, y, z);
 
         if (player.isSneaking()) {
-            // 3. Shift + Left Click on Block: Unlink
+            return false;
+        }
+
+        // Left Click on Block: IO Toggle (Backward)
+        if (te instanceof ISidedIO io) {
             if (!world.isRemote) {
-                NBTTagCompound nbt = stack.getTagCompound();
-                if (nbt != null) {
-                    nbt.removeTag("LinkedX");
-                    nbt.removeTag("LinkedY");
-                    nbt.removeTag("LinkedZ");
-                    nbt.removeTag("LinkedDim");
-                    player.addChatMessage(new ChatComponentTranslation("chat.omoshiroikamo.wrench_unlinked"));
+                MovingObjectPosition mop = this.getMovingObjectPositionFromPlayer(world, player, true);
+                if (mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+                    ForgeDirection clicked = ForgeDirection.getOrientation(mop.sideHit);
+                    float hitX = (float) (mop.hitVec.xCoord - mop.blockX);
+                    float hitY = (float) (mop.hitVec.yCoord - mop.blockY);
+                    float hitZ = (float) (mop.hitVec.zCoord - mop.blockZ);
+                    ForgeDirection target = getClickedSide(clicked, hitX, hitY, hitZ);
+                    io.toggleSide(target, true);
                 }
             }
             return true; // Cancel breaking
-        } else {
-            // 4. Normal Left Click on Block: IO Toggle (Backward)
-            if (te instanceof ISidedIO io) {
-                if (!world.isRemote) {
-                    MovingObjectPosition mop = this.getMovingObjectPositionFromPlayer(world, player, true);
-                    if (mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                        ForgeDirection clicked = ForgeDirection.getOrientation(mop.sideHit);
-                        float hitX = (float) (mop.hitVec.xCoord - mop.blockX);
-                        float hitY = (float) (mop.hitVec.yCoord - mop.blockY);
-                        float hitZ = (float) (mop.hitVec.zCoord - mop.blockZ);
-                        ForgeDirection target = getClickedSide(clicked, hitX, hitY, hitZ);
-                        io.toggleSide(target, true);
-                    }
-                }
-                return true; // Cancel breaking
-            }
         }
         return false;
-    }
-
-    @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        // 5. Right Click in Air: Port Type Cycle (Forward / Backward)
-        MovingObjectPosition mop = this.getMovingObjectPositionFromPlayer(world, player, true);
-        if (mop == null || mop.typeOfHit == MovingObjectPosition.MovingObjectType.MISS) {
-            if (!world.isRemote) {
-                int delta = player.isSneaking() ? -1 : 1;
-                cyclePortType(stack, player, delta);
-            }
-        }
-        return stack;
-    }
-
-    @Override
-    public String getItemStackDisplayName(ItemStack stack) {
-        String baseName = super.getItemStackDisplayName(stack);
-        IPortType.Type type = getSelectedPortType(stack);
-        String typeName = LangHelpers.localize("gui.port_type." + type.name());
-        return LangHelpers.localize("gui.port_type.format", baseName, typeName);
     }
 
     public static ForgeDirection getClickedSide(ForgeDirection hitSide, float hitX, float hitY, float hitZ) {
@@ -230,33 +139,5 @@ public class ItemWrench extends ItemOK implements IToolHammer {
     @Override
     public void toolUsed(ItemStack item, EntityLivingBase user, int x, int y, int z) {
 
-    }
-
-    private void cyclePortType(ItemStack stack, EntityPlayer player, int delta) {
-        NBTTagCompound nbt = stack.getTagCompound();
-        if (nbt == null) {
-            nbt = new NBTTagCompound();
-            stack.setTagCompound(nbt);
-        }
-        int currentIndex = nbt.getInteger("SelectedPortTypeIndex");
-        currentIndex = (currentIndex + delta) % IPortType.SUPPORTED_TYPES.length;
-        if (currentIndex < 0) currentIndex += IPortType.SUPPORTED_TYPES.length;
-
-        nbt.setInteger("SelectedPortTypeIndex", currentIndex);
-
-        IPortType.Type nextType = IPortType.SUPPORTED_TYPES[currentIndex];
-        String typeName = LangHelpers.localize("gui.port_type." + nextType.name());
-        player.addChatMessage(new ChatComponentTranslation("gui.port_type", typeName));
-    }
-
-    public static IPortType.Type getSelectedPortType(ItemStack stack) {
-        if (stack.hasTagCompound()) {
-            int index = stack.getTagCompound()
-                .getInteger("SelectedPortTypeIndex");
-            if (index >= 0 && index < IPortType.SUPPORTED_TYPES.length) {
-                return IPortType.SUPPORTED_TYPES[index];
-            }
-        }
-        return IPortType.SUPPORTED_TYPES[0];
     }
 }
