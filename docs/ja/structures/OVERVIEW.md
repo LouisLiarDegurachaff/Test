@@ -15,14 +15,15 @@ OmoshiroiKamo の構造体システムは、高い柔軟性、型安全性、お
 ## 2. 主要コンポーネント
 
 - **`IStructureEntry`**: コアとなるデータインターフェース。単一のマルチブロック定義を表します。
-- **`StructureJsonReader`**: JSON ファイルを `IStructureEntry` オブジェクトに変換します。デフォルトのマッピングや階層的な定義を処理します。
-- **`StructureManager`**: 全てのロードされた構造体を保持し、検索サービスを提供する中央レジストリ。
-- **`StructureAgent`**: TileEntity（`TEMachineController` など）が使用するブリッジコンポーネント。特定の構造体インスタンスを管理し、形成状態の追跡や世界（ワールド）との照合を行います。
-- **`PortManager`**: 構造体の `requirements` セクションを専門に扱い、現在のマシンが必要な I/O タイプ（ポート）を十分に備えているかをチェックします。
+- **`StructureJsonReader` / `StructureJsonWriter`**: JSON ファイルと `IStructureEntry` オブジェクトを相互変換します。リーダー側はデフォルトのマッピングや階層的な定義を処理します。
+- **`StructureManager`**: 全てのロードされた構造体を保持し、検索サービスを提供する中央レジストリ。config ディレクトリの管理と、初回起動時の `DefaultStructureGenerator` 実行も担います。
+- **`BlockResolver`**: 記号マッピングを StructureLib のエレメントに変換します。ブロック ID・メタデータのワイルドカード・複数候補の解決を行います。
+- **`StructureRegistrationVisitor` / `StructureRegistrationUtils`**: 構造体定義から StructureLib の `IStructureDefinition` を組み立てます。コントローラー記号と各マッピングの配線を担当します。
+- **`StructureScanner`**: ワールド上の既存の建造物を読み取って形状データに戻します。構造ワンドと `/ok multiblock scan` の実体です。
+- **`RequirementRegistry` / `IStructureRequirement`**: 構造体の `requirements` セクションを扱い、マシンが必要な I/O タイプ（ポート）を十分に備えているかをチェックします。
+- **`StructureValidationVisitor`**: 登録前に読み込んだ定義を検証し、構文・論理エラーをロード時点で表面化させます。
 
 ## 3. モジュールとの関係
 
-- **Multiblock モジュール**: 固定された事前定義済みの構造体名を使用します。JSON が欠落している場合のハードコードされたフォールバックを提供することが多いです。
-- **Modular モジュール**: 動的にロードされるカスタム構造体を使用します。柔軟性を確保するため、完全に JSON システムに依存しています。
+- **Multiblock モジュール**: 固定された事前定義済みの構造体名（Solar Array・Quantum Extractor・Quantum Beacon）を使用します。JSON が欠落している場合のハードコードされたフォールバックを提供することが多いです。
 
-両方のモジュールは同じ基盤 API を共有しており、開発者と Mod パック製作者の両方に一貫した体験を提供します。

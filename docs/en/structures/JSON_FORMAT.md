@@ -1,6 +1,7 @@
 # Structure System: JSON Format Reference
 
-This reference describes the JSON format used to define multiblock structures. Files should be placed in `config/omoshiroikamo/modular/structures/`.
+This reference describes the JSON format used to define multiblock structures. This mod's structures live in `config/omoshiroikamo/structures/`, one file per machine family (`ore_miner.json`, `res_miner.json`, `solar_array.json`, `quantum_beacon.json`). Missing files are regenerated on startup by `DefaultStructureGenerator`, and entries you add by hand are preserved.
+
 
 ## 1. File Structure
 A file can contain a single object or an array of objects. A special object named `default` (or `defaults`) can be used to define shared mappings.
@@ -24,36 +25,49 @@ A file can contain a single object or an array of objects. A special object name
 | `batchMin` | Integer | Minimum batch size for recipes (default: 1). |
 | `batchMax` | Integer | Maximum batch size for recipes (default: 1). |
 | `tier` | Integer | Machine tier (default: 0). |
-| `tierMap` | Object | Definition of Tiers provided by each part of the structure. |
+| `tierStructures` | Array | References to sub-structures that contribute a Tier. |
 | `defaultFacing` | String | Default facing is horizontal. You can modify it to vertical (`UP`, `DOWN`). |
 
-### 2.2 Tier Map Details
-The `tierMap` allows you to assign specific Tiers to parts of the machine based on the materials (blocks) used.
+
+### 2.2 Tiered Mappings
+Instead of a plain block ID, a symbol can be mapped to a **component** whose Tier depends on which
+block was actually placed. Give the mapping a `component` name and a `tiers` table of block ID to Tier:
 ```json
-"tierMap": {
-  "glass": {
-    "omoshiroikamo:basaltStructure:1": 1,
-    "omoshiroikamo:basaltStructure:2": 2
-  },
-  "casing": {
-    "omoshiroikamo:modularMachineCasing:0": 1,
-    "omoshiroikamo:modularMachineCasing:1": 2,
-    "omoshiroikamo:modularMachineCasing:2": 3
+"mappings": {
+  "F": {
+    "component": "glass",
+    "tiers": {
+      "omoshiroikamo:basalt_structure:1": 1,
+      "omoshiroikamo:basalt_structure:2": 2
+    }
   }
 }
 ```
-If a recipe specifies `"requiredTier": { "glass": 2 }`, it will only be executable on structures using `basaltStructure:2` or better for the glass component.
+The resulting Tier per component is exposed on the structure entry, so machine code can read it back
+(for example to gate a recipe on `glass` being Tier 2 or better).
+
+### 2.3 Tier Structures
+`tierStructures` lists sub-structures that each contribute a Tier to the parent machine. Every entry
+takes a `name`, a `tier`, an optional `component` (default `structure`), an optional `mode`
+(`tier`, the default, or `count`), and `offsets` describing where the sub-structure sits relative to
+the controller:
+```json
+"tierStructures": [
+  { "name": "solarArrayTier2", "tier": 2, "component": "cell", "offsets": [[0, 1, 0]] }
+]
+```
+Each offset is either a `[x, y, z]` triple or an object with `target` and `anchor` triples.
 
 ## 3. Mappings
 Mappings link characters in `layers` to block IDs.
 
 ### String Format
-`"F": "omoshiroikamo:basaltStructure:*"` (Wildcard `*` for meta)
+`"F": "omoshiroikamo:basalt_structure:*"` (Wildcard `*` for meta)
 
 ### Object Format (Partial Implementation Planned)
 ```json
 "Q": {
-  "block": "omoshiroikamo:quantumOreExtractor:0",
+  "block": "omoshiroikamo:quantum_ore_extractor:0",
   "max": 1  // * Currently not implemented. Planned to limit the maximum number of installations in the future.
 }
 ```
@@ -62,8 +76,8 @@ Mappings link characters in `layers` to block IDs.
 ```json
 "A": {
   "blocks": [
-    "omoshiroikamo:modifierNull:0",
-    "omoshiroikamo:modifierSpeed:0"
+    "omoshiroikamo:modifier_null:0",
+    "omoshiroikamo:modifier_speed:0"
   ]
 }
 ```
@@ -106,21 +120,21 @@ These symbols are used for core system functions and **cannot be overridden** in
 | (Space) | Any | Any block (ignored during validation). |
 
 ### 5.2 Conventional Reserved Symbols (Conditional)
-`A`, `L`, and `G` are conventionally used by specific modules and behave differently depending on the structure type.
+`A`, `L`, and `G` are conventionally used by this mod's built-in machines.
 
-| Symbol | Meaning | In Internal Machines | In Modular Structures |
-| :--- | :--- | :--- | :--- |
-| `A` | Modifier | **Code Priority** | Overridable in JSON |
-| `L` | Lens | **Code Priority** | Overridable in JSON |
-| `G` | Solar Cell | **Code Priority** | Overridable in JSON |
+| Symbol | Meaning | In Built-in Machines |
+| :--- | :--- | :--- |
+| `A` | Modifier | **Code Priority** |
+| `L` | Lens | **Code Priority** |
+| `G` | Solar Cell | **Code Priority** |
 
 > [!IMPORTANT]
-> **In Internal Machines (Existing Multiblocks):**
 > For machines like Solar Array or Extractor, these symbols are tied to internal logic (e.g., addon connectivity). Therefore, any definitions in JSON for these symbols will be skipped/protected by the system's code.
-> 
-> **In Modular Structures:**
-> For new structures created in `modular/structures/`, you can freely define and use these symbols just like any other character (e.g., `B`, `C`, `X`).
 
 ## 6. Commands
-- `/ok multiblock reload`: Reloads Multiblock module structures.
-- `/ok modular reload`: Reloads Modular module recipe and structure data.
+- `/ok multiblock reload`: Reloads multiblock structure data from JSON.
+- `/ok multiblock status`: Shows the current status, including structures that failed to load.
+- `/ok multiblock scan <name> <x1> <y1> <z1> <x2> <y2> <z2>`: Scans the given area and writes it out as structure JSON.
+- `/ok wand save [force] <name>`: Saves the current structure wand selection as structure JSON.
+- `/ok wand clear`: Clears the current wand selection.
+

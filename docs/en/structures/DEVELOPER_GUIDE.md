@@ -4,51 +4,102 @@ This guide is for developers looking to extend the Structure JSON System via cod
 
 ## 1. Registering New Requirements
 
-To add a new type of requirement (e.g., `manaInput` from Botania):
+A requirement answers one question: does the block at these coordinates count towards this type?
+Implement `IStructureRequirement`, then register a parser for the JSON type key.
 
 1. **Implement `IStructureRequirement`**:
-   Create a class that handles the counting logic.
    ```java
    public class ManaRequirement implements IStructureRequirement {
+
+       private final String type;
        private final int min;
-       public ManaRequirement(int min) { this.min = min; }
-       
-       @Override
-       public boolean isMet(List<IModularPort> ports) {
-           return ports.stream().filter(p -> p instanceof IManaPort).count() >= min;
+       private final int max;
+
+       public ManaRequirement(String type, int min, int max) {
+           this.type = type;
+           this.min = min;
+           this.max = max;
        }
-       
-       public static ManaRequirement fromJson(String type, JsonObject json) {
-           return new ManaRequirement(json.get("min").getAsInt());
+
+       @Override
+       public String getType() { return type; }
+
+       @Override
+       public int getMinCount() { return min; }
+
+       @Override
+       public int getMaxCount() { return max; }
+
+       @Override
+       public boolean matches(World world, int x, int y, int z) {
+           TileEntity te = world.getTileEntity(x, y, z);
+           if (!(te instanceof IModularPort)) return false;
+           return ((IModularPort) te).getPortType() == IPortType.Type.MANA;
+       }
+
+       @Override
+       public JsonObject serialize() {
+           JsonObject json = new JsonObject();
+           json.addProperty("type", type);
+           if (min != 0) json.addProperty("min", min);
+           if (max != Integer.MAX_VALUE) json.addProperty("max", max);
+           return json;
+       }
+
+       public static IStructureRequirement fromJson(String type, JsonObject json) {
+           int min = json.has("min") ? json.get("min").getAsInt() : 0;
+           int max = json.has("max") ? json.get("max").getAsInt() : Integer.MAX_VALUE;
+           return new ManaRequirement(type, min, max);
        }
    }
    ```
+   One class covers both directions: the `type` string it was constructed with is what distinguishes
+   `manaInput` from `manaOutput`.
 
 2. **Register the Parser**:
-   Do this during `FMLPreInitializationEvent` or `FMLInitializationEvent`.
+   The built-in types register themselves in `RequirementRegistry`'s static initializer. Anything you
+   add has to be registered before JSON loading happens — `FMLPreInitializationEvent` or
+   `FMLInitializationEvent` are both early enough.
    ```java
    RequirementRegistry.register("manaInput", ManaRequirement::fromJson);
+   RequirementRegistry.register("manaOutput", ManaRequirement::fromJson);
    ```
 
 ## 2. Using Visitors
 
-The Visitor pattern allows you to traverse a structure and perform actions.
-
-### Example: Tier Scanning
-If you want to determine the "Tier" based on how many elite blocks are in the structure:
+`IStructureVisitor` has two entry points — one for the definition itself, one for each requirement on it:
 
 ```java
-public class TierScannerVisitor implements IStructureVisitor {
-    private int eliteCount = 0;
+public interface IStructureVisitor {
+    void visit(IStructureEntry entry);
+    void visit(IStructureRequirement requirement);
+}
+```
+
+`entry.accept(visitor)` calls `visit(entry)` first, then `visit(requirement)` once per requirement.
+This is how validation is wired (`StructureValidationVisitor`) and how a definition is turned into a
+StructureLib shape (`StructureRegistrationVisitor`).
+
+### Example: Summing Requirement Counts
+
+```java
+public class RequirementSummaryVisitor implements IStructureVisitor {
+
+    private final Map<String, Integer> minByType = new HashMap<>();
 
     @Override
     public void visit(IStructureEntry entry) {
-        // You can iterate layers and mappings here
+        // Called once, before any requirement. Reset per-entry state here.
+        minByType.clear();
     }
 
-    // Usually called during a world scan via StructureLib integration
-    public void onBlockFound(Block block, int meta) {
-        if (block == ModBlocks.eliteCasing) eliteCount++;
+    @Override
+    public void visit(IStructureRequirement requirement) {
+        minByType.merge(requirement.getType(), requirement.getMinCount(), Integer::sum);
+    }
+
+    public Map<String, Integer> getMinByType() {
+        return minByType;
     }
 }
 ```
@@ -74,6 +125,6 @@ Serializes `StructureEntry` objects back into `JsonObject`.
 
 Using these classes ensures consistency and avoids manual JSON parsing bugs.
 
-## 4. Testing
+## 5. Testing
 
-To maintain long-term stability, we follow a rigorous testing strategy with over 220 test cases. See the [Test Plan](./TEST_PLAN.md) for detailed test phases and implementation guidelines.
+To maintain long-term stability, we follow a rigorous testing strategy. See the [Test Plan](./TEST_PLAN.md) for detailed test phases and implementation guidelines.

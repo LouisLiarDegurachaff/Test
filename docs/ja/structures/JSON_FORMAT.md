@@ -1,6 +1,7 @@
 # 構造体システム: JSON フォーマットリファレンス
 
-このリファレンスでは、マルチブロック構造体を定義するための JSON 形式について説明します。ファイルは `config/omoshiroikamo/modular/structures/` に配置してください。
+このリファレンスでは、マルチブロック構造体を定義するための JSON 形式について説明します。本 Mod の構造体は `config/omoshiroikamo/structures/` に、マシン系統ごと 1 ファイル（`ore_miner.json` / `res_miner.json` / `solar_array.json` / `quantum_beacon.json`）で配置されます。欠けているファイルは起動時に `DefaultStructureGenerator` が再生成し、手書きで追加したエントリはそのまま保持されます。
+
 
 ## 1. ファイル構成
 ファイルには単一のオブジェクト、またはオブジェクトの配列を含めることができます。`default`（または `defaults`）という名前の特殊なオブジェクトを使用して、共通のマッピングを定義できます。
@@ -24,36 +25,48 @@
 | `batchMin` | Integer | レシピの最小バッチサイズ（デフォルト: 1）。 |
 | `batchMax` | Integer | レシピの最大バッチサイズ（デフォルト: 1）。 |
 | `tier` | Integer | マシンのティア（デフォルト: 0）。 |
-| `tierMap` | オブジェクト | 構造体の各パーツが提供する Tier の定義。 |
+| `tierStructures` | 配列 | Tier を供給するサブ構造体への参照。 |
 | `defaultFacing` | 文字列 | 構造体のデフォルトの向き（`UP`, `DOWN`）。指定がない場合は横向きになります。 |
 
-### 2.2 Tier Map の詳細
-`tierMap` を使用すると、使用する材料（ブロック）に応じてマシンの一部に特定の Tier を割り当てることができます。
+### 2.2 Tier 付きマッピング
+記号には単なるブロック ID の代わりに「**コンポーネント**」を割り当てることができ、その Tier は実際に
+設置されたブロックによって決まります。マッピングに `component` 名と、ブロック ID → Tier の `tiers`
+テーブルを与えます。
 ```json
-"tierMap": {
-  "glass": {
-    "omoshiroikamo:basaltStructure:1": 1,
-    "omoshiroikamo:basaltStructure:2": 2
-  },
-  "casing": {
-    "omoshiroikamo:modularMachineCasing:0": 1,
-    "omoshiroikamo:modularMachineCasing:1": 2,
-    "omoshiroikamo:modularMachineCasing:2": 3
+"mappings": {
+  "F": {
+    "component": "glass",
+    "tiers": {
+      "omoshiroikamo:basalt_structure:1": 1,
+      "omoshiroikamo:basalt_structure:2": 2
+    }
   }
 }
 ```
-レシピ側で `"requiredTier": { "glass": 2 }` と指定されている場合、上記の設定では `basaltStructure:2` 以上のブロックを使用している構造体でのみそのレシピが有効になります。
+コンポーネントごとに決まった Tier は構造体定義から取得できるため、マシン側のコードで読み戻せます
+（例: `glass` が Tier 2 以上であることをレシピの条件にする）。
+
+### 2.3 Tier 構造体 (Tier Structures)
+`tierStructures` には、親マシンに Tier を供給するサブ構造体を列挙します。各エントリは `name`、`tier`、
+任意の `component`（既定値 `structure`）、任意の `mode`（既定値 `tier`、または `count`）、および
+コントローラーからの相対位置を表す `offsets` を取ります。
+```json
+"tierStructures": [
+  { "name": "solarArrayTier2", "tier": 2, "component": "cell", "offsets": [[0, 1, 0]] }
+]
+```
+各 offset は `[x, y, z]` の 3 要素配列、または `target` と `anchor` の 3 要素配列を持つオブジェクトです。
 
 ## 3. マッピング (Mappings)
 マッピングは、`layers` 内の文字をブロック ID にリンクします。
 
 ### 文字列形式
-`"F": "omoshiroikamo:basaltStructure:*"` (メタデータにワイルドカード `*` が使用可能)
+`"F": "omoshiroikamo:basalt_structure:*"` (メタデータにワイルドカード `*` が使用可能)
 
 ### オブジェクト形式 (一部実装予定)
 ```json
 "Q": {
-  "block": "omoshiroikamo:quantumOreExtractor:0",
+  "block": "omoshiroikamo:quantum_ore_extractor:0",
   "max": 1
 }
 ```
@@ -62,8 +75,8 @@
 ```json
 "A": {
   "blocks": [
-    "omoshiroikamo:modifierNull:0",
-    "omoshiroikamo:modifierSpeed:0"
+    "omoshiroikamo:modifier_null:0",
+    "omoshiroikamo:modifier_speed:0"
   ]
 }
 ```
@@ -106,21 +119,21 @@
 | (スペース) | 任意 (Any) | バリデーション対象外の空間です。 |
 
 ### 5.2 慣習的予約記号 (条件付き)
-`A`, `L`, `G` は特定のモジュールで慣習的に使用されており、構造体の種類によって扱いが異なります。
+`A`, `L`, `G` は本 Mod の組み込みマシンで慣習的に使用されています。
 
-| 記号 | 意味 | 既存マシンでの扱い | Modularでの扱い |
-| :--- | :--- | :--- | :--- |
-| `A` | Modifier | **コード定義が優先** | JSONで定義可能 |
-| `L` | Lens | **コード定義が優先** | JSONで定義可能 |
-| `G` | Solar Cell | **コード定義が優先** | JSONで定義可能 |
+| 記号 | 意味 | 組み込みマシンでの扱い |
+| :--- | :--- | :--- |
+| `A` | Modifier | **コード定義が優先** |
+| `L` | Lens | **コード定義が優先** |
+| `G` | Solar Cell | **コード定義が優先** |
 
 > [!IMPORTANT]
-> **Internalマシン（既存マシン）の場合:**
-> Solar Array や Extractor 等の既存マシンでは、これらの記号は内部ロジック（アドオン接続等）と密接に紐付いています。そのため、JSON で定義を書いてもシステム（コード）側の定義によってスキップ/保護されます。
-> 
-> **Modular構造体の場合:**
-> `modular/structures/` に作成する新しい構造体では、これらの記号も他の記号（`B`, `C`, `X`等）と同様に自由に定義して使用できます。
+> Solar Array や Extractor 等の組み込みマシンでは、これらの記号は内部ロジック（アドオン接続等）と密接に紐付いています。そのため、JSON で定義を書いてもシステム（コード）側の定義によってスキップ/保護されます。
 
 ## 6. コマンド
-- `/ok multiblock reload`: Multiblockモジュールの構造体を再読み込みします。
-- `/ok modular reload`: Modularモジュールのレシピと構造体データを再読み込みします。
+- `/ok multiblock reload`: マルチブロックの構造体データを JSON から再読み込みします。
+- `/ok multiblock status`: 現在の状態（読み込みに失敗した構造体を含む）を表示します。
+- `/ok multiblock scan <name> <x1> <y1> <z1> <x2> <y2> <z2>`: 指定範囲をスキャンして構造体 JSON として書き出します。
+- `/ok wand save [force] <name>`: 構造ワンドの現在の選択範囲を構造体 JSON として保存します。
+- `/ok wand clear`: 構造ワンドの選択範囲をクリアします。
+

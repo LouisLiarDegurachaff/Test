@@ -15,14 +15,15 @@ The system follows two primary design patterns to ensure scalability:
 ## 2. Core Components
 
 - **`IStructureEntry`**: The core data interface. It represents a single multiblock definition.
-- **`StructureJsonReader`**: Converts JSON files into `IStructureEntry` objects. It handles default mappings and hierarchical definitions.
-- **`StructureManager`**: The central registry that stores all loaded structures and provides lookup services.
-- **`StructureAgent`**: A bridge component used by TileEntities (like `TEMachineController`) to manage their specific structure instance, tracking formed states and validating the world against the definition.
-- **`PortManager`**: Specifically handles the `requirements` section of a structure, checking if the current machine has enough of the required I/O types.
+- **`StructureJsonReader` / `StructureJsonWriter`**: Convert between JSON files and `IStructureEntry` objects. The reader handles default mappings and hierarchical definitions.
+- **`StructureManager`**: The central registry that stores all loaded structures and provides lookup services. It also owns the config directory and triggers `DefaultStructureGenerator` on first run.
+- **`BlockResolver`**: Turns a symbol mapping into a StructureLib element, resolving block IDs, metadata wildcards and multi-choice mappings.
+- **`StructureRegistrationVisitor` / `StructureRegistrationUtils`**: Build a StructureLib `IStructureDefinition` out of an entry, wiring the controller symbol and every mapped element.
+- **`StructureScanner`**: Reads an existing build in the world back into a shape. This is what backs the structure wand and `/ok multiblock scan`.
+- **`RequirementRegistry` / `IStructureRequirement`**: Handle the `requirements` section of a structure, checking whether the machine has enough of the required I/O types.
+- **`StructureValidationVisitor`**: Validates a loaded entry before it is registered, so syntax and logic errors surface at load time.
 
 ## 3. Module Relationship
 
-- **Multiblock Module**: Uses fixed, predefined structure names. It often provides a hardcoded fallback if the JSON is missing.
-- **Modular Module**: Uses dynamically loaded custom structures. It relies entirely on the JSON system for flexibility.
+- **Multiblock Module**: Uses fixed, predefined structure names (Solar Array, Quantum Extractor, Quantum Beacon). It often provides a hardcoded fallback if the JSON is missing.
 
-Both modules share the same underlying API, ensuring a consistent experience for both developers and modpack creators.

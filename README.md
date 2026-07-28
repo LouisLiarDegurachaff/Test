@@ -3,6 +3,11 @@
 [![](https://cf.way2muchnoise.eu/full_1382289_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/omoshiroi-kamo)
 [![](https://cf.way2muchnoise.eu/versions/For%20MC_1382289_all.svg)](https://www.curseforge.com/minecraft/mc-mods/omoshiroi-kamo)
 
+> [!CAUTION]
+> ### The Modular Machinery module has left this mod, and there is NO save compatibility.
+>
+> It moved to a standalone mod, **[OK Modular](https://github.com/Chlorine0808/OKModular)**.
+
 ## About This Mod
 
 Omoshiroi Kamo is an open-source collection of modern mod backports for Minecraft 1.7.10.
@@ -19,7 +24,6 @@ Each backport module can be individually enabled or disabled in the config.
 - Environmental Tech (Clean-Room Rewrite)
 - Chickens, More Chickens and Roost (Backport)
 - Fluid Cows (Backport WIP)
-- Modular Machinery (Basic function only for now)
 - Deep Mob Learning
 
 ![Backport Config](https://media.forgecdn.net/attachments/1389/517/z7214707883928_63d047db4be5142074322b35573e34d4.jpg)
@@ -54,36 +58,9 @@ Advanced JSON-based multiblock structure system with in-game reloading and scann
 
 ![Multiblock](https://media.forgecdn.net/attachments/1410/44/2025-12-01_12-32-24-png.png)
 
-### Modular Machinery Backport (WIP, Actively Developing)
+### Modular Machinery Backport
 
-A backport and enhancement of the original Modular Machinery mod.
-
-- **Multiblock System**:
-    - Create custom machines via JSON configuration.
-    - Rotation and flip structures
-- **IO Ports**:
-    - Items (WIP ME output port)
-    - Fluids (WIP ME output port)
-    - Energy (RF/EU)
-    - Gas (Mekanism)
-    - Mana (Botania)
-    - Vis & Essentia (Thaumcraft, WIP ME Essentia IO)
-
-
-### Modular Recipe System
-Decoupled and extensible recipe engine supporting multiple resource types and dynamic logic.
-- **English**: [Overview](./docs/en/recipes/OVERVIEW.md)
-- **日本語 (Japanese)**: [概要](./docs/ja/recipes/OVERVIEW.md)
-
-- **External Port Proxy System**:
-    - Use external blocks (chests, tanks, energy storage) as machine ports
-    - Supports 6 resource types with unified interface
-- **NEI Integration**:
-    - Support for viewing recipes and structure previews. (WIP enhanced view)
-    - Structure preview
-- **Dynamic Reload**: Reload recipes and structures via `/ok modular reload`.
-- **Customizable Logic**: Detailed recipe control and processing via JSON. (tons of future plans https://github.com/Shigure-Ruiseki/OmoshiroiKamo/issues/101)
-
+The Modular Machinery backport moved to a standalone mod, [OK Modular](https://github.com/Chlorine0808/OKModular).
 
 ### Chickens, More Chickens & Roost (Backport)
 
