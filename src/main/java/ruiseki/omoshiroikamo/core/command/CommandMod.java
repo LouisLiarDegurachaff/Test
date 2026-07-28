@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.core.command;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,6 +11,7 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -66,6 +68,15 @@ public class CommandMod implements ICommand {
 
     public void addSubcommands(String name, ICommand command) {
         subCommands.put(name, command);
+    }
+
+    /**
+     * @return The names of all registered subcommands, alphabetically sorted so that help output is stable.
+     */
+    protected List<String> getSortedSubcommandNames() {
+        List<String> names = Lists.newArrayList(getSubcommands().keySet());
+        Collections.sort(names);
+        return names;
     }
 
     private List<String> getSubCommands(String cmd) {
@@ -203,5 +214,69 @@ public class CommandMod implements ICommand {
 
     protected void sendLocalizedMessage(ICommandSender sender, String key, Object... params) {
         printLineToChat(sender, LangHelpers.localize(key, params));
+    }
+
+    /**
+     * Send a localized message in the given color.
+     * A color must never be passed as a format parameter instead: keys without a placeholder drop it
+     * silently, keys with a typed placeholder such as {@code %d} turn the whole line into a format
+     * error, and keys with a single {@code %s} show the color code where the value belongs.
+     *
+     * @param sender Use this commandsender to print chat message.
+     * @param color  The color of the whole line.
+     * @param key    The l10n key of the message.
+     * @param params The parameters of the formatting.
+     */
+    protected void sendColoredMessage(ICommandSender sender, EnumChatFormatting color, String key, Object... params) {
+        printLineToChat(sender, color + LangHelpers.localize(key, params));
+    }
+
+    /**
+     * Print the header line of a help listing.
+     *
+     * @param sender Use this commandsender to print chat message.
+     * @param key    The l10n key of the title.
+     */
+    protected void printUsageTitle(ICommandSender sender, String key) {
+        sendColoredMessage(sender, EnumChatFormatting.YELLOW, key);
+    }
+
+    /**
+     * Print one help line per registered subcommand, so that the listing can never drift away from
+     * what is actually registered. Subcommands that have subcommands of their own get those listed
+     * as {@code <a|b>}; for the others the optional l10n key {@code <helpKeyPrefix><name>.args}
+     * supplies the argument list. The optional key {@code <helpKeyPrefix><name>.desc} supplies the
+     * description. A subcommand without any of those entries is still listed, just bare.
+     *
+     * @param sender        Use this commandsender to print chat message.
+     * @param commandPath   The command path up to this command, for example {@code "/ok multiblock"}.
+     * @param helpKeyPrefix The l10n key prefix of this command's subcommand entries.
+     */
+    protected void printSubcommandUsage(ICommandSender sender, String commandPath, String helpKeyPrefix) {
+        for (String name : getSortedSubcommandNames()) {
+            StringBuilder line = new StringBuilder("  ").append(commandPath)
+                .append(' ')
+                .append(name);
+
+            ICommand subcommand = getSubcommands().get(name);
+            List<String> nested = subcommand instanceof CommandMod
+                ? ((CommandMod) subcommand).getSortedSubcommandNames()
+                : Collections.emptyList();
+            if (!nested.isEmpty()) {
+                line.append(" <")
+                    .append(joinStrings(nested.iterator(), "|"))
+                    .append('>');
+            } else if (LangHelpers.canLocalize(helpKeyPrefix + name + ".args")) {
+                line.append(' ')
+                    .append(LangHelpers.localize(helpKeyPrefix + name + ".args"));
+            }
+
+            if (LangHelpers.canLocalize(helpKeyPrefix + name + ".desc")) {
+                line.append(" - ")
+                    .append(LangHelpers.localize(helpKeyPrefix + name + ".desc"));
+            }
+
+            printLineToChat(sender, EnumChatFormatting.WHITE + line.toString());
+        }
     }
 }

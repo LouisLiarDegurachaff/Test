@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.command.multiblock;
+package ruiseki.omoshiroikamo.core.command.wand;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -6,24 +6,31 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 
 import ruiseki.omoshiroikamo.core.command.CommandMod;
-import ruiseki.omoshiroikamo.core.command.multiblock.wand.CommandMultiblockWandClear;
-import ruiseki.omoshiroikamo.core.command.multiblock.wand.CommandMultiblockWandSave;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 
-public class CommandMultiblockWand extends CommandMod {
+/**
+ * Structure wand subcommand handler.
+ * Handles: /ok wand &lt;save|clear&gt;
+ */
+public class CommandWand extends CommandMod {
 
     public static final String NAME = "wand";
 
-    public CommandMultiblockWand(ModBase mod) {
+    public CommandWand(ModBase mod) {
         super(mod, NAME);
-        addSubcommands(CommandMultiblockWandClear.NAME, new CommandMultiblockWandClear(mod));
-        addSubcommands(CommandMultiblockWandSave.NAME, new CommandMultiblockWandSave(mod));
+        addSubcommands(CommandWandClear.NAME, new CommandWandClear(mod));
+        addSubcommands(CommandWandSave.NAME, new CommandWandSave(mod));
+    }
+
+    @Override
+    public int getRequiredPermissionLevel() {
+        return 2;
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         if (!(sender instanceof EntityPlayer)) {
-            sendLocalizedMessage(sender, "command.ok.wand_players_only", EnumChatFormatting.RED);
+            sendColoredMessage(sender, EnumChatFormatting.RED, "command.ok.wand_players_only");
             return;
         }
         super.processCommand(sender, args);
@@ -31,6 +38,7 @@ public class CommandMultiblockWand extends CommandMod {
 
     @Override
     public void processCommandHelp(ICommandSender sender, String[] args) throws CommandException {
-        sendLocalizedMessage(sender, "command.ok.wand_usage", EnumChatFormatting.RED);
+        printUsageTitle(sender, "command.ok.usage_title");
+        printSubcommandUsage(sender, "/ok wand", "command.ok.help.wand.");
     }
 }

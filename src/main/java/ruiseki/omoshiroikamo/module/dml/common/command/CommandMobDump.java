@@ -103,19 +103,21 @@ public class CommandMobDump extends CommandMod {
                 dumpMob(clazz, mobWriter, world, entityName);
                 count++;
             } catch (Exception e) {
-                sendLocalizedMessage(
+                sendColoredMessage(
                     sender,
+                    EnumChatFormatting.RED,
                     "command.ok.dml_mobdump_failed",
-                    EnumChatFormatting.RED.toString() + clazz.getSimpleName(),
+                    clazz.getSimpleName(),
                     e.getMessage());
                 Logger.error("Failed to dump " + clazz.getSimpleName(), e);
             }
         }
 
-        sendLocalizedMessage(
+        sendColoredMessage(
             sender,
+            EnumChatFormatting.GREEN,
             "command.ok.dml_mobdump_success",
-            EnumChatFormatting.GREEN.toString() + count,
+            count,
             baseDir.getPath());
     }
 

@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.command.multiblock.wand;
+package ruiseki.omoshiroikamo.core.command.wand;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -9,11 +9,11 @@ import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.common.structure.WandSelectionManager;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 
-public class CommandMultiblockWandClear extends CommandMod {
+public class CommandWandClear extends CommandMod {
 
     public static final String NAME = "clear";
 
-    public CommandMultiblockWandClear(ModBase mod) {
+    public CommandWandClear(ModBase mod) {
         super(mod, NAME);
     }
 
@@ -24,9 +24,9 @@ public class CommandMultiblockWandClear extends CommandMod {
             .hasPendingScan(player.getUniqueID())) {
             WandSelectionManager.getInstance()
                 .clearPendingScan(player.getUniqueID());
-            sendLocalizedMessage(player, "command.ok.wand_cleared", EnumChatFormatting.GREEN);
+            sendColoredMessage(player, EnumChatFormatting.GREEN, "command.ok.wand_cleared");
         } else {
-            sendLocalizedMessage(player, "command.ok.wand_no_selection", EnumChatFormatting.GRAY);
+            sendColoredMessage(player, EnumChatFormatting.GRAY, "command.ok.wand_no_selection");
         }
     }
 }

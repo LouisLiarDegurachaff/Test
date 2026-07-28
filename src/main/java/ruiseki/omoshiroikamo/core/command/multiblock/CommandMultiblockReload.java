@@ -19,12 +19,12 @@ public class CommandMultiblockReload extends CommandMod {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-        sendLocalizedMessage(sender, "command.ok.multiblock_reloading", EnumChatFormatting.YELLOW);
+        sendColoredMessage(sender, EnumChatFormatting.YELLOW, "command.ok.multiblock_reloading");
 
         MultiBlockModule multiblockModule = getMod().getModuleManager()
             .getModuleByType(MultiBlockModule.class);
         if (multiblockModule == null || !multiblockModule.isEnable()) {
-            sendLocalizedMessage(sender, "command.ok.multiblock_disabled", EnumChatFormatting.RED);
+            sendColoredMessage(sender, EnumChatFormatting.RED, "command.ok.multiblock_disabled");
             return;
         }
 
@@ -34,16 +34,13 @@ public class CommandMultiblockReload extends CommandMod {
                 .reload(sender);
             multiblockModule.reload(sender);
         } catch (Exception e) {
-            sendLocalizedMessage(
-                sender,
-                "command.ok.multiblock_reload_failed",
-                EnumChatFormatting.RED.toString() + e.getMessage());
+            sendColoredMessage(sender, EnumChatFormatting.RED, "command.ok.multiblock_reload_failed", e.getMessage());
             return;
         }
 
         if (!JsonErrorCollector.getInstance()
             .hasErrors()) {
-            sendLocalizedMessage(sender, "command.ok.multiblock_reload_success", EnumChatFormatting.GREEN);
+            sendColoredMessage(sender, EnumChatFormatting.GREEN, "command.ok.multiblock_reload_success");
         }
     }
 }

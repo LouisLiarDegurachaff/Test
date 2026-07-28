@@ -22,7 +22,7 @@ public class CommandReload extends CommandMod {
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         JsonErrorCollector.getInstance()
             .clear();
-        sendLocalizedMessage(sender, "command.ok.reload_all", EnumChatFormatting.YELLOW);
+        sendColoredMessage(sender, EnumChatFormatting.YELLOW, "command.ok.reload_all");
 
         getMod().getModuleManager()
             .reloadAll(sender);
@@ -34,7 +34,7 @@ public class CommandReload extends CommandMod {
             JsonErrorCollector.getInstance()
                 .reportToChat(sender);
         } else {
-            sendLocalizedMessage(sender, "command.ok.reload_all_success", EnumChatFormatting.GREEN);
+            sendColoredMessage(sender, EnumChatFormatting.GREEN, "command.ok.reload_all_success");
         }
     }
 }

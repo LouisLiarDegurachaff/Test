@@ -137,8 +137,30 @@ command.ok.ignitedPlayer=The player '%s' was lit on fire for %s seconds
 command.ok.noConfigsFound=There were no config values found that can be set
 
 command.ok.main_usage_title=Usage:
-command.ok.main_usage_multiblock=/ok multiblock - Multiblock management commands
-command.ok.main_usage_multiblock_reload=/ok multiblock reload - Reload multiblock data
+
+# Help entries: command.ok.help.<path>.<subcommand>.args / .desc
+# Both are optional; subcommands that have subcommands of their own list them automatically.
+command.ok.help.version.desc=Show the mod version
+command.ok.help.reload.desc=Reload every enabled module
+command.ok.help.multiblock.desc=Multiblock management commands
+command.ok.help.wand.desc=Structure wand selection commands
+command.ok.help.utils.desc=Utility commands
+command.ok.help.dml.desc=Deep Mob Learning commands
+
+command.ok.help.multiblock.reload.desc=Reload multiblock data
+command.ok.help.multiblock.status.desc=Show current status
+command.ok.help.multiblock.scan.args=<name> <x1> <y1> <z1> <x2> <y2> <z2>
+command.ok.help.multiblock.scan.desc=Scan area to JSON
+
+command.ok.help.wand.save.args=[force] <name>
+command.ok.help.wand.save.desc=Save wand selection to JSON
+command.ok.help.wand.clear.desc=Clear the current wand selection
+
+command.ok.help.utils.dump.desc=Data dump commands
+command.ok.help.utils.dump.mobs.args=<EntityID|EntityName|all>
+command.ok.help.utils.dump.mobs.desc=Dump mob data to JSON
+
+command.ok.help.dml.reload.desc=Reload DML models and configurations
 
 command.ok.reloading=[OmoshiroiKamo] Reloading configurations...
 command.ok.reload_success=[OmoshiroiKamo] Configurations reloaded successfully!
@@ -158,11 +180,14 @@ command.ok.multiblock_disabled=[Multiblock] Module is disabled.
 command.ok.multiblock_reload_failed=[Multiblock] Reload failed: %s
 command.ok.multiblock_reload_success=[OmoshiroiKamo] Multiblock reload completed!
 
-command.ok.status_header=== OmoshiroiKamo Multiblock Status ===
-command.ok.status_initialized=Initialized: 
+command.ok.status_header=[OmoshiroiKamo] Multiblock Status
+command.ok.status_initialized=Initialized: %s
 command.ok.status_yes=Yes
 command.ok.status_no=No
-command.ok.status_errors=Errors: 
+command.ok.status_structures=Structures: %s loaded (%s custom)
+command.ok.status_errors=Errors: %s
+command.ok.status_errors_more=  ...and %s more
+command.ok.status_errors_file=  Check: config/omoshiroikamo/structures/errors.txt
 command.ok.status_none=None
 
 command.ok.scan_usage=Usage: /ok multiblock scan <name> <x1> <y1> <z1> <x2> <y2> <z2>
@@ -176,13 +201,13 @@ command.ok.scan_file=File: %s
 command.ok.scan_failed=[OmoshiroiKamo] Scan failed: %s
 
 command.ok.usage_title=Usage:
-command.ok.usage_reload=/ok multiblock reload - Reload configurations
-command.ok.usage_status=/ok multiblock status - Show current status
-command.ok.usage_scan=/ok multiblock scan <name> <x1> <y1> <z1> <x2> <y2> <z2> - Scan area to JSON
-command.ok.usage_wand_save=/ok multiblock wand save <name> - Save wand selection to JSON
 
 command.ok.wand_players_only=[OmoshiroiKamo] This command can only be used by players!
-command.ok.wand_usage=Usage: /ok multiblock wand save <name>
+command.ok.wand_usage=Usage: /ok wand save [force] <name>
+command.ok.wand_invalid_name=[OmoshiroiKamo] Invalid structure name: '%s' (no spaces, and none of \ / : * ? " < > |)
+command.ok.wand_already_exists=[OmoshiroiKamo] '%s' already exists! Nothing was saved.
+command.ok.wand_already_exists_hint=Overwrite it with: /ok wand save force %s
+command.ok.wand_overwriting=[OmoshiroiKamo] Overwriting '%s'...
 command.ok.wand_no_pending=[OmoshiroiKamo] No pending scan! Use the Structure Wand first.
 command.ok.wand_different_dimension=[OmoshiroiKamo] Selection is in a different dimension!
 command.ok.wand_scanning=[OmoshiroiKamo] Scanning %d blocks...

@@ -40,6 +40,17 @@ public class LangHelpers {
     }
 
     /**
+     * Check if a key has an entry in the language files.
+     * Useful for optional entries, where a missing key should not fall back to the raw key.
+     *
+     * @param key The key of the language file entry.
+     * @return If the key can be localized.
+     */
+    public static boolean canLocalize(String key) {
+        return MinecraftHelpers.isModdedEnvironment() && StatCollector.canTranslate(key);
+    }
+
+    /**
      * Show status info about the activation about an item to the info box.
      *
      * @param infoLines       The list to add info to.

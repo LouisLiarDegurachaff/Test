@@ -2,8 +2,6 @@ package ruiseki.omoshiroikamo.module.dml.common.command;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
 
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.init.ModBase;
@@ -28,9 +26,7 @@ public class CommandDML extends CommandMod {
 
     @Override
     public void processCommandHelp(ICommandSender sender, String[] args) throws CommandException {
-        sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "[DML] Usage:"));
-        sender.addChatMessage(
-            new ChatComponentText(
-                EnumChatFormatting.WHITE + "  /ok dml reload - Reload DML models and configurations"));
+        printUsageTitle(sender, "command.ok.usage_title");
+        printSubcommandUsage(sender, "/ok dml", "command.ok.help.dml.");
     }
 }

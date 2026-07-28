@@ -139,8 +139,30 @@ command.ok.ignitedPlayer=プレイヤー '%s' は%s秒間燃焼しました
 command.ok.noConfigsFound=設定可能なコンフィグ値は見つかりませんでした
 
 command.ok.main_usage_title=使い方:
-command.ok.main_usage_multiblock=/ok multiblock - マルチブロック管理コマンド
-command.ok.main_usage_multiblock_reload=/ok multiblock reload - マルチブロックデータを再読み込み
+
+# ヘルプ項目: command.ok.help.<パス>.<サブコマンド>.args / .desc
+# どちらも省略可。サブコマンドを持つコマンドは、その一覧が自動で表示される。
+command.ok.help.version.desc=Modのバージョンを表示
+command.ok.help.reload.desc=有効な全モジュールを再読み込み
+command.ok.help.multiblock.desc=マルチブロック管理コマンド
+command.ok.help.wand.desc=ストラクチャーワンドの選択範囲コマンド
+command.ok.help.utils.desc=ユーティリティコマンド
+command.ok.help.dml.desc=Deep Mob Learning コマンド
+
+command.ok.help.multiblock.reload.desc=マルチブロックデータを再読み込み
+command.ok.help.multiblock.status.desc=現在のステータスを表示
+command.ok.help.multiblock.scan.args=<名前> <x1> <y1> <z1> <x2> <y2> <z2>
+command.ok.help.multiblock.scan.desc=範囲をスキャンしてJSONに保存
+
+command.ok.help.wand.save.args=[force] <名前>
+command.ok.help.wand.save.desc=ワンドの選択範囲をJSONに保存
+command.ok.help.wand.clear.desc=現在のワンドの選択範囲をクリア
+
+command.ok.help.utils.dump.desc=データダンプコマンド
+command.ok.help.utils.dump.mobs.args=<EntityID|EntityName|all>
+command.ok.help.utils.dump.mobs.desc=モブデータをJSONに出力
+
+command.ok.help.dml.reload.desc=DMLのモデルと設定を再読み込み
 
 command.ok.reloading=[OmoshiroiKamo] 設定を再読み込み中...
 command.ok.reload_success=[OmoshiroiKamo] 設定の再読み込みに成功しました!
@@ -160,11 +182,14 @@ command.ok.multiblock_disabled=[Multiblock] モジュールが無効です。
 command.ok.multiblock_reload_failed=[Multiblock] 再読み込み失敗: %s
 command.ok.multiblock_reload_success=[OmoshiroiKamo] マルチブロックの再読み込みが完了しました!
 
-command.ok.status_header=== OmoshiroiKamo マルチブロックステータス ===
-command.ok.status_initialized=初期化済み:
+command.ok.status_header=[OmoshiroiKamo] マルチブロックステータス
+command.ok.status_initialized=初期化済み: %s
 command.ok.status_yes=はい
 command.ok.status_no=いいえ
-command.ok.status_errors=エラー:
+command.ok.status_structures=ストラクチャー: %s 件読み込み (うちカスタム %s 件)
+command.ok.status_errors=エラー: %s
+command.ok.status_errors_more=  ...他 %s 件
+command.ok.status_errors_file=  確認: config/omoshiroikamo/structures/errors.txt
 command.ok.status_none=なし
 
 command.ok.scan_usage=使い方: /ok multiblock scan <名前> <x1> <y1> <z1> <x2> <y2> <z2>
@@ -178,13 +203,13 @@ command.ok.scan_file=ファイル: %s
 command.ok.scan_failed=[OmoshiroiKamo] スキャン失敗: %s
 
 command.ok.usage_title=使い方:
-command.ok.usage_reload=/ok multiblock reload - 設定を再読み込み
-command.ok.usage_status=/ok multiblock status - 現在のステータスを表示
-command.ok.usage_scan=/ok multiblock scan <名前> <x1> <y1> <z1> <x2> <y2> <z2> - 範囲をスキャンしてJSONに保存
-command.ok.usage_wand_save=/ok multiblock wand save <名前> - ワンドの選択範囲をJSONに保存
 
 command.ok.wand_players_only=[OmoshiroiKamo] このコマンドはプレイヤーのみ使用可能です!
-command.ok.wand_usage=使い方: /ok multiblock wand save <名前>
+command.ok.wand_usage=使い方: /ok wand save [force] <名前>
+command.ok.wand_invalid_name=[OmoshiroiKamo] 無効なストラクチャー名: '%s' (スペースと \ / : * ? " < > | は使用できません)
+command.ok.wand_already_exists=[OmoshiroiKamo] '%s' は既に存在します! 保存しませんでした。
+command.ok.wand_already_exists_hint=上書きする場合: /ok wand save force %s
+command.ok.wand_overwriting=[OmoshiroiKamo] '%s' を上書きします...
 command.ok.wand_no_pending=[OmoshiroiKamo] 保留中のスキャンがありません! 先にストラクチャーワンドを使用してください。
 command.ok.wand_different_dimension=[OmoshiroiKamo] 選択範囲が異なるディメンションにあります!
 command.ok.wand_scanning=[OmoshiroiKamo] %d ブロックをスキャン中...

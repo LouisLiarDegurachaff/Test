@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
@@ -31,6 +32,40 @@ public class StructureScanner {
     // Excludes reserved symbols: Q (Controller), _ (mandatory air)
     // Space is output for air blocks
     private static final String SYMBOLS = "ABCDEFGHIJKLMNOPRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    /** Directory scanned structures are written to, relative to the config directory. */
+    private static final String OUTPUT_DIR = "structures/custom";
+
+    /** Characters a file name cannot hold on every platform we care about. */
+    private static final Pattern INVALID_NAME_CHARS = Pattern.compile("[\\\\/:*?\"<>|]");
+
+    /**
+     * Resolve the file a scan of the given name writes to.
+     *
+     * @param configDir configuration directory
+     * @param name      structure name
+     * @return the target file, which may or may not exist yet
+     */
+    public static File getOutputFile(File configDir, String name) {
+        return new File(new File(configDir, OUTPUT_DIR), name + ".json");
+    }
+
+    /**
+     * Check whether a name is usable as a structure name.
+     * The name becomes a file name, so anything a file name cannot hold is rejected. Note that a
+     * name is a single command argument and can therefore never contain spaces.
+     *
+     * @param name structure name
+     * @return true when the name is safe to scan to
+     */
+    public static boolean isValidName(String name) {
+        return name != null && !name.isEmpty()
+            && !INVALID_NAME_CHARS.matcher(name)
+                .find()
+            && !name.contains("..")
+            && !name.startsWith(".")
+            && !name.endsWith(".");
+    }
 
     /**
      * Scan the specified region and save it as a JSON file.
@@ -137,12 +172,12 @@ public class StructureScanner {
         array.add(entry.serialize());
 
         // Save to disk - in a 'custom' subdirectory
-        File customDir = new File(configDir, "structures/custom");
+        File outputFile = getOutputFile(configDir, name);
+        File customDir = outputFile.getParentFile();
         if (!customDir.exists()) {
             customDir.mkdirs();
         }
 
-        File outputFile = new File(customDir, name + ".json");
         Gson gson = new GsonBuilder().setPrettyPrinting()
             .create();
 

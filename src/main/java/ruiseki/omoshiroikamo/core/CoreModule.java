@@ -18,6 +18,7 @@ import ruiseki.omoshiroikamo.core.capabilities.light.CapabilityLight;
 import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
 import ruiseki.omoshiroikamo.core.command.CommandReload;
 import ruiseki.omoshiroikamo.core.command.multiblock.CommandMultiblock;
+import ruiseki.omoshiroikamo.core.command.wand.CommandWand;
 import ruiseki.omoshiroikamo.core.common.init.CoreItems;
 import ruiseki.omoshiroikamo.core.common.init.CoreOreDict;
 import ruiseki.omoshiroikamo.core.common.init.CoreRecipes;
@@ -70,6 +71,7 @@ public class CoreModule extends ModModuleBase {
     protected void registerSubCommand(Map<String, ICommand> subcommand) {
         super.registerSubCommand(subcommand);
         subcommand.put(CommandMultiblock.NAME, new CommandMultiblock(this.getMod()));
+        subcommand.put(CommandWand.NAME, new CommandWand(this.getMod()));
         subcommand.put(CommandReload.NAME, new CommandReload(this.getMod()));
     }
 

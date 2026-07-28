@@ -5,7 +5,6 @@ import java.util.Map;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.EnumChatFormatting;
 
 import ruiseki.omoshiroikamo.core.command.utils.CommandUtils;
 import ruiseki.omoshiroikamo.core.init.ModBase;
@@ -28,11 +27,7 @@ public class CommandOK extends CommandMod {
 
     @Override
     public void processCommandHelp(ICommandSender sender, String[] args) throws CommandException {
-        sendLocalizedMessage(sender, "command.ok.main_usage_title", EnumChatFormatting.YELLOW);
-        sendLocalizedMessage(sender, "command.ok.main_usage_multiblock", EnumChatFormatting.WHITE.toString() + "  ");
-        sendLocalizedMessage(
-            sender,
-            "command.ok.main_usage_multiblock_reload",
-            EnumChatFormatting.WHITE.toString() + "  ");
+        printUsageTitle(sender, "command.ok.main_usage_title");
+        printSubcommandUsage(sender, "/ok", "command.ok.help.");
     }
 }
