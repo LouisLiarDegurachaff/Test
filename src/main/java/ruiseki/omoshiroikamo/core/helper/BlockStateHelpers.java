@@ -40,7 +40,7 @@ public class BlockStateHelpers {
     public static void setFacingProp(World world, int x, int y, int z, ForgeDirection facing) {
         try (BlockState state = getBlockState(world, x, y, z)) {
             state.setPropertyValue("facing", facing);
-            state.place(world, x, y, z);
+            state.place(world, x, y, z, 3);
         }
     }
 
@@ -73,7 +73,7 @@ public class BlockStateHelpers {
     public static void setCraftingState(World world, int x, int y, int z, CraftingState state) {
         try (BlockState blockState = getBlockState(world, x, y, z)) {
             blockState.setPropertyValue(CRAFTING_STATE, state.getIndex());
-            blockState.place(world, x, y, z);
+            blockState.place(world, x, y, z, 3);
         }
     }
 

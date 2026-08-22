@@ -39,9 +39,6 @@ import ruiseki.omoshiroikamo.module.cows.integration.nei.CowMilkingRecipeHandler
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLBlocks;
 import ruiseki.omoshiroikamo.module.dml.integration.nei.LootFabricatorRecipeHandler;
 import ruiseki.omoshiroikamo.module.dml.integration.nei.SimulationChamberRecipeHandler;
-import ruiseki.omoshiroikamo.module.ids.client.gui.container.TerminalGuiContainer;
-import ruiseki.omoshiroikamo.module.ids.integration.nei.TerminalOverlay;
-import ruiseki.omoshiroikamo.module.ids.integration.nei.TerminalPositioner;
 import ruiseki.omoshiroikamo.module.machinery.MachineryModule;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryItems;
@@ -200,11 +197,6 @@ public class NEIConfig implements IConfigureNEI {
         if (BackportConfigs.enableCows) {
             registerHandler(new CowBreedingRecipeHandler());
             registerHandler(new CowMilkingRecipeHandler());
-        }
-
-        if (BackportConfigs.enableIDs) {
-            API.registerGuiOverlay(TerminalGuiContainer.class, "crafting", new TerminalPositioner());
-            API.registerGuiOverlayHandler(TerminalGuiContainer.class, new TerminalOverlay(), "crafting");
         }
 
         if (BackportConfigs.enableDML) {

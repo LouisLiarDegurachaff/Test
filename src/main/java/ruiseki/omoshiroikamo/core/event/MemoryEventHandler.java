@@ -9,7 +9,6 @@ import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.module.ids.IDsModule;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 
 /**
@@ -53,8 +52,5 @@ public class MemoryEventHandler {
     public void onClientDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         Logger.info("Client disconnected from server. Clearing all structure tint caches.");
         StructureTintCache.clearAll();
-        if (IDsModule.IDsNetworkTickHandler != null) {
-            IDsModule.IDsNetworkTickHandler.clear();
-        }
     }
 }
